@@ -1,0 +1,14 @@
+
+/**
+ * Retrieve a single object by{%for Column in Columns%} {{Column.getPhpName()}}{%endfor%}.
+ *
+ * @param      PropelPDO $con the connection to use
+ * @return     {{ObjectClassName}}
+ */
+ public static function retrieveBy{%for Column in Columns%}{{Column.getPhpName()}}{%endfor%}({%for Column in Columns%}${{Column.getName()}}, {%endfor%}PropelPDO $con=null){
+     $Criteria=new Criteria();
+{%for Column in Columns%}
+     $Criteria->add({{peerBuilder.getColumnConstant(Column)}},${{Column.getName()}});
+{%endfor%}
+     return {{peerBuilder.getPeerClassname()}}::doSelectOne($Criteria,$con);
+ }

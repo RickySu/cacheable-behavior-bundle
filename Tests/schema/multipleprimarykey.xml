@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="cacheable_behavior_database" defaultIdMethod="native">
+    <table name="multiplepk">
+        <column name="pk1" required="true" primaryKey="true" type="INTEGER" />
+        <column name="pk2" required="true" primaryKey="true" type="INTEGER" />
+        <behavior name="cacheable">            
+            <parameter name="primarykey_cache" value="true"/>
+        </behavior>
+    </table>
+</database>
