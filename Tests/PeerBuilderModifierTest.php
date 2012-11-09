@@ -10,8 +10,7 @@ class PeerBuilderModifierTest extends Base
 {
     public function setup()
     {
-        $this->prepareMockTagcache();        
-        //$this->simpleBuild('multipleprimarykey');
+        $this->prepareMockTagcache();
     }
     
     public function testSinglePK()

@@ -10,13 +10,11 @@ class PeerBuilderModifier {
 
     protected $behavior;
     protected $table;
-    protected $peerBuilder;
-    protected $twig;
+    protected $peerBuilder;    
 
     public function __construct($behavior) {
         $this->behavior = $behavior;
-        $this->table = $behavior->getTable();
-        $this->twig = Renderer::getInstance();
+        $this->table = $behavior->getTable();        
     }
 
     public function staticMethods($builder) {
@@ -36,25 +34,22 @@ class PeerBuilderModifier {
         return preg_replace($Pattern, "protected static function rebuild_$1", $script);
     }
 
-    protected function replaceRetrieveByPKMultiplePK($PKs, $OldMethod) {
-        $table = $this->table;
-        $OldMethod = $this->replaceMethodName($OldMethod, $this->peerBuilder->getRetrieveMethodName());
+    protected function replaceRetrieveByPKMultiplePK($PKs) {                
         return $this->behavior->renderTemplate('retrieveByPKMultiplePK.php', array(
                     'PKs' => $PKs,
                     'peerBuilder' => $this->peerBuilder,
-                )) . $OldMethod;
+                ));
     }
 
     /**
      *
      * @param Column $PK
      */
-    protected function replaceRetrieveByPKSinglePK($PK, $OldMethod) {
-        $OldMethod = $this->replaceMethodName($OldMethod, $this->peerBuilder->getRetrieveMethodName());
+    protected function replaceRetrieveByPKSinglePK($PK) {       
         return $this->behavior->renderTemplate('retrieveByPKSinglePK.php', array(
                     'PK' => $PK,
                     'peerBuilder' => $this->peerBuilder,
-                )) . $OldMethod;
+                ));
     }
 
     protected function addPKCache(&$script) {
@@ -63,16 +58,17 @@ class PeerBuilderModifier {
         }
         $parser = new PropelPHPParser($script, true);
         $OldMethod = $parser->findMethod($this->peerBuilder->getRetrieveMethodName());
+        $OldMethod = $this->replaceMethodName($OldMethod, $this->peerBuilder->getRetrieveMethodName());
         $PKs = $this->table->getPrimaryKey();
         if (!$this->table->hasPrimaryKey()) {
             return;
         }
         if (count($PKs) == 1) {
-            $ReplaceScript = $this->replaceRetrieveByPKSinglePK($PKs[0], $OldMethod);
+            $ReplaceScript = $this->replaceRetrieveByPKSinglePK($PKs[0]);
         } else {
-            $ReplaceScript = $this->replaceRetrieveByPKMultiplePK($PKs, $OldMethod);
+            $ReplaceScript = $this->replaceRetrieveByPKMultiplePK($PKs);
         }
-        $parser->replaceMethod($this->peerBuilder->getRetrieveMethodName(), $ReplaceScript);
+        $parser->replaceMethod($this->peerBuilder->getRetrieveMethodName(), $ReplaceScript.$OldMethod);
         $script = $parser->getCode();
     }
 
@@ -98,7 +94,7 @@ class PeerBuilderModifier {
     }
 
     protected function addGetTagcache() {
-        return $this->behavior->renderTemplate('getTagcacheStaticMethod.php');
+        return $this->behavior->renderTemplate('getTagcacheMethod.php',array('static'=>true));
     }
 
     protected function getTagsScript() {
