@@ -98,9 +98,7 @@ class PeerBuilderModifier {
     }
 
     protected function addGetTagcache() {
-        $this->peerBuilder->declareClassNamespace('EventProxy', 'RickySu\\CacheableBehaviorBundle\\Event');
-        $this->peerBuilder->declareClassNamespace('GetTagcacheEvent', 'RickySu\\CacheableBehaviorBundle\\Event');
-        return $this->behavior->renderTemplate('getTagcachePeer.php');
+        return $this->behavior->renderTemplate('getTagcacheStaticMethod.php');
     }
 
     protected function getTagsScript() {
