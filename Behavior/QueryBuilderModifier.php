@@ -11,9 +11,7 @@ class QueryBuilderModifier {
     protected $behavior;
     protected $table;
     protected $queryBuilder;    
-
-    protected $MagicMethodCall=array();
-            
+             
     public function __construct($behavior) {
         $this->behavior = $behavior;
         $this->table = $behavior->getTable();        
@@ -23,13 +21,14 @@ class QueryBuilderModifier {
         $this->queryBuilder = $builder;
         $Script = '';
         $Script.=$this->addGetTagcache();
-        $Script.=$this->addUniqueIndexCache();
-        $Script.=$this->addMagicMethodCalls();
+        $UniqueIndexs=array();
+        $Script.=$this->addUniqueIndexCache($UniqueIndexs);
+        $Script.=$this->addFindHook($UniqueIndexs);
         return $Script;
     }
 
-    protected function addMagicMethodCalls(){
-        return $this->behavior->renderTemplate('magicMethodsCallQuery.php',array('MagicMethodCall'=>$this->MagicMethodCall));
+    protected function addFindHook($UniqueIndexs){        
+        return $this->behavior->renderTemplate('findHooklQuery.php',array('UniqueIndexs'=>$UniqueIndexs));
     }
     
     public function queryFilter(&$script) {
@@ -81,7 +80,7 @@ class QueryBuilderModifier {
         $script = $parser->getCode();
     }
 
-    protected function addUniqueIndexCache() {
+    protected function addUniqueIndexCache(&$UniqueIndexs) {
         if ($this->behavior->getParameter('uniqueindex_cache') != 'true') {
             return;
         }
@@ -90,16 +89,16 @@ class QueryBuilderModifier {
             $Columns = array();
             foreach ($Unique->getColumns() as $Col) {
                 $Columns[] = $this->table->getColumn($Col);
-            }
-            array_push($this->MagicMethodCall,$Columns);            
+            }            
+            array_push($UniqueIndexs,$Columns);
             $Script.=$this->behavior->renderTemplate('UniqueIndexCacheQuery', array(
                 'Columns' => $Columns,
                 'ObjectClassName' => $this->queryBuilder->getObjectClassname(),
                 'queryBuilder' => $this->queryBuilder,
                 'peerBuilder' => $this->queryBuilder->getPeerBuilder(),
                     )
-            );
-        }
+            );            
+        }        
         return $Script;
     }
 

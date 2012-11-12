@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="cacheable_behavior_database" defaultIdMethod="native">
-    <table name="singlepk">
+    <table name="#Namespace#_singlepk">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />        
         <behavior name="cacheable">
             <parameter name="primarykey_cache" value="true"/>

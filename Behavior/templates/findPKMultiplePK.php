@@ -16,7 +16,7 @@
      */
      public function findPk($key, PropelPDO $con = null)
      {
-         $CacheKey="Model:<?php echo $peerBuilder->getObjectClassname()?>:<?php foreach($PKs as $Index => $Column):?>{$key[<?php echo $Index?>]},<?php endforeach?>";
+         $CacheKey="Model:<?php echo $peerBuilder->getObjectClassname()?>:<?php foreach($PKs as $Index => $Column):?>{$key[<?php echo $Index?>]}<?php endforeach?>";
          $Cache=$this->getTagcache();
          if($Obj=$Cache->get($CacheKey)){
              return $Obj;

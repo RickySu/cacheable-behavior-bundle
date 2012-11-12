@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="cacheable_behavior_database" defaultIdMethod="native">
-    <table name="multipleuniquekey">
+    <table name="#Namespace#_multipleuniquekey">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" />
         <column name="key2" required="true" type="INTEGER" />

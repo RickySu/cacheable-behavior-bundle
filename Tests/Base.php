@@ -10,12 +10,13 @@ class Base extends \PHPUnit_Framework_TestCase {
 
     protected $Tagcache=null;
     
-    protected function LoadSchema($SchemaFile) {
-        return file_get_contents(__DIR__ . "/schema/$SchemaFile.xml");
+    protected function LoadSchema($SchemaFile,$Namespace) {
+        $Schema=file_get_contents(__DIR__ . "/schema/$SchemaFile.xml");
+        return str_replace("#Namespace#", $Namespace, $Schema);
     }
 
-    protected function simpleBuild($SchemaFile) {
-        $XML = $this->LoadSchema($SchemaFile);
+    protected function simpleBuild($SchemaFile,$Namespace) {
+        $XML = $this->LoadSchema($SchemaFile,$Namespace);
         $builder = new \PropelQuickBuilder();
         $config = $builder->getConfig();
         $config->setBuildProperty('behaviorCacheableClass', 'RickySu\\CacheableBehaviorBundle\\Behavior\\CacheableBehavior');
