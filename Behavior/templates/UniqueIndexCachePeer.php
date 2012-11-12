@@ -3,11 +3,11 @@
  * Retrieve a single object by<?php foreach($Columns as $Column):?> <?php echo $Column->getPhpName()?><?php endforeach ?>.
  *
  * @param      PropelPDO $con the connection to use
- * @return     <?php echo $ObjectClassName?> 
+ * @return     <?php echo $peerBuilder->getObjectClassname()?> 
  */
  public static function retrieveBy<?php foreach($Columns as $Column):?><?php echo $Column->getPhpName()?><?php endforeach ?>(<?php foreach($Columns as $Column):?>$<?php echo $Column->getName()?>, <?php endforeach ?>PropelPDO $con=null)
  {
-     $CacheKey="Model:<?php echo $ObjectClassName?><?php foreach($Columns as $Column):?>-<?php echo $Column->getPhpName()?><?php endforeach ?>:<?php foreach($Columns as $Column):?>$<?php echo $Column->getName()?><?php endforeach ?>";
+     <?php echo $CacheKey?>
      $Cache=self::getTagcache();
      if($Object=$Cache->get($CacheKey)){
          return $Object;

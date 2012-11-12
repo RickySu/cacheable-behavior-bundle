@@ -5,7 +5,7 @@
      * Go fast if the query is untouched.
      *
      * <code>
-     * $obj = $c->findPk(array(<?php foreach($PKs as $Column):?>$<?php echo strtolower($Column->getName())?>, <?php endforeach?>), $con);
+     * $obj = $c->findPk(array(<?php foreach($PKs as $PK):?>$<?php echo strtolower($PK->getName())?>, <?php endforeach?>), $con);
      * </code>
      *
      * @param array $key Primary key to use for the query
@@ -16,7 +16,10 @@
      */
      public function findPk($key, PropelPDO $con = null)
      {
-         $CacheKey="Model:<?php echo $peerBuilder->getObjectClassname()?>:<?php foreach($PKs as $Index => $Column):?>{$key[<?php echo $Index?>]}<?php endforeach?>";
+<?php foreach($PKs as $Index => $PK):?>
+         $<?php echo $PK->getName()?>=$key[<?php echo $Index?>];
+<?php endforeach?>
+         <?php echo $CacheKey?>
          $Cache=$this->getTagcache();
          if($Obj=$Cache->get($CacheKey)){
              return $Obj;

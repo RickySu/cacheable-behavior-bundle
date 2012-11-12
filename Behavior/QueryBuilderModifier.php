@@ -10,27 +10,34 @@ class QueryBuilderModifier {
 
     protected $behavior;
     protected $table;
-    protected $queryBuilder;    
-             
+    protected $queryBuilder;
+
     public function __construct($behavior) {
         $this->behavior = $behavior;
-        $this->table = $behavior->getTable();        
+        $this->table = $behavior->getTable();
     }
 
     public function queryMethods($builder) {
         $this->queryBuilder = $builder;
         $Script = '';
         $Script.=$this->addGetTagcache();
-        $UniqueIndexs=array();
+        $UniqueIndexs = array();
         $Script.=$this->addUniqueIndexCache($UniqueIndexs);
         $Script.=$this->addFindHook($UniqueIndexs);
         return $Script;
     }
 
-    protected function addFindHook($UniqueIndexs){        
-        return $this->behavior->renderTemplate('findHooklQuery.php',array('UniqueIndexs'=>$UniqueIndexs));
+    protected function generateCacheKey($Keys) {
+        return $this->behavior->renderTemplate('UniqueKey.php', array(
+                    'ObjectClassName' => $this->queryBuilder->getPeerBuilder()->getObjectClassname(),
+                    'Keys' => $Keys,
+                ));
     }
-    
+
+    protected function addFindHook($UniqueIndexs) {
+        return $this->behavior->renderTemplate('findHooklQuery.php', array('UniqueIndexs' => $UniqueIndexs));
+    }
+
     public function queryFilter(&$script) {
         $this->addPKCache($script);
     }
@@ -40,11 +47,11 @@ class QueryBuilderModifier {
         return preg_replace($Pattern, "protected function rebuild_$1", $script);
     }
 
-    protected function replaceFindPKMultiplePK($PKs) {                
+    protected function replaceFindPKMultiplePK($PKs) {
         return $this->behavior->renderTemplate('findPKMultiplePK.php', array(
                     'PKs' => $PKs,
+                    'CacheKey' => $this->generateCacheKey($PKs),
                     'queryBuilder' => $this->queryBuilder,
-                    'peerBuilder' => $this->queryBuilder->getPeerBuilder(),
                 ));
     }
 
@@ -52,11 +59,11 @@ class QueryBuilderModifier {
      *
      * @param Column $PK
      */
-    protected function replaceFindPKSinglePK($PK) {        
+    protected function replaceFindPKSinglePK($PK) {
         return $this->behavior->renderTemplate('findPKSinglePK.php', array(
                     'PK' => $PK,
+                    'CacheKey' => $this->generateCacheKey(array($PK)),
                     'queryBuilder' => $this->queryBuilder,
-                    'peerBuilder' => $this->queryBuilder->getPeerBuilder(),
                 ));
     }
 
@@ -66,7 +73,7 @@ class QueryBuilderModifier {
         }
         $parser = new PropelPHPParser($script, true);
         $OldMethod = $parser->findMethod('findPk');
-        $OldMethod = $this->replaceMethodName($OldMethod,'findPk');
+        $OldMethod = $this->replaceMethodName($OldMethod, 'findPk');
         $PKs = $this->table->getPrimaryKey();
         if (!$this->table->hasPrimaryKey()) {
             return;
@@ -89,21 +96,20 @@ class QueryBuilderModifier {
             $Columns = array();
             foreach ($Unique->getColumns() as $Col) {
                 $Columns[] = $this->table->getColumn($Col);
-            }            
-            array_push($UniqueIndexs,$Columns);
+            }
+            array_push($UniqueIndexs, $Columns);
             $Script.=$this->behavior->renderTemplate('UniqueIndexCacheQuery', array(
                 'Columns' => $Columns,
-                'ObjectClassName' => $this->queryBuilder->getObjectClassname(),
                 'queryBuilder' => $this->queryBuilder,
-                'peerBuilder' => $this->queryBuilder->getPeerBuilder(),
+                'CacheKey' => $this->generateCacheKey($Columns),
                     )
-            );            
-        }        
+            );
+        }
         return $Script;
     }
 
     protected function addGetTagcache() {
-        return $this->behavior->renderTemplate('getTagcacheMethod.php',array('static'=>false));
+        return $this->behavior->renderTemplate('getTagcacheMethod.php', array('static' => false));
     }
 
 }

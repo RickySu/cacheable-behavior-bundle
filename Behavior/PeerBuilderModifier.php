@@ -34,20 +34,17 @@ class PeerBuilderModifier {
         return preg_replace($Pattern, "protected static function rebuild_$1", $script);
     }
 
-    protected function replaceRetrieveByPKMultiplePK($PKs) {                
-        return $this->behavior->renderTemplate('retrieveByPKMultiplePK.php', array(
-                    'PKs' => $PKs,
-                    'peerBuilder' => $this->peerBuilder,
-                ));
+    protected function generateCacheKey($Keys){
+        return $this->behavior->renderTemplate('UniqueKey.php',array(
+                                'ObjectClassName'=>$this->peerBuilder->getObjectClassname(),
+                                'Keys'=>$Keys,
+                            ));
     }
-
-    /**
-     *
-     * @param Column $PK
-     */
-    protected function replaceRetrieveByPKSinglePK($PK) {       
-        return $this->behavior->renderTemplate('retrieveByPKSinglePK.php', array(
-                    'PK' => $PK,
+    
+    protected function replaceRetrieveByPK($PKs) {                
+        return $this->behavior->renderTemplate('retrieveByPK.php', array(
+                    'PKs' => $PKs,
+                    'CacheKey'=>$this->generateCacheKey($PKs),
                     'peerBuilder' => $this->peerBuilder,
                 ));
     }
@@ -63,11 +60,7 @@ class PeerBuilderModifier {
         if (!$this->table->hasPrimaryKey()) {
             return;
         }
-        if (count($PKs) == 1) {
-            $ReplaceScript = $this->replaceRetrieveByPKSinglePK($PKs[0]);
-        } else {
-            $ReplaceScript = $this->replaceRetrieveByPKMultiplePK($PKs);
-        }
+        $ReplaceScript = $this->replaceRetrieveByPK($PKs);
         $parser->replaceMethod($this->peerBuilder->getRetrieveMethodName(), $ReplaceScript.$OldMethod);
         $script = $parser->getCode();
     }
@@ -84,8 +77,8 @@ class PeerBuilderModifier {
                 $Columns[] = $this->table->getColumn($Col);
             }
             $Script.=$this->behavior->renderTemplate($TemplateName, array(
-                'Columns' => $Columns,
-                'ObjectClassName' => $this->peerBuilder->getObjectClassname(),
+                'Columns' => $Columns,                
+                'CacheKey'=>$this->generateCacheKey($Columns),
                 'peerBuilder' => $this->peerBuilder,
                     )
             );

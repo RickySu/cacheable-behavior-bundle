@@ -10,7 +10,7 @@
      */
      public static function <?php echo $peerBuilder->getRetrieveMethodName()?>(<?php foreach($PKs as $Column):?>$<?php echo strtolower($Column->getName())?>, <?php endforeach?>PropelPDO $con = null)
      {
-         $CacheKey="Model:<?php echo $peerBuilder->getObjectClassname()?>:<?php foreach($PKs as $Index => $Column):?>$<?php echo $Column->getName()?><?php endforeach?>";
+         <?php echo $CacheKey?>
          $Cache=self::getTagcache();
          if($Obj=$Cache->get($CacheKey)){
              return $Obj;

@@ -4,21 +4,21 @@
  *
  * @param      $name
  * @param      $arguments
- * @return     <?php echo $ObjectClassName?> 
+ * @return     <?php echo $queryBuilder->getObjectClassname()?> 
  */
  protected function findOneBy<?php foreach($Columns as $Column):?><?php echo $Column->getPhpName()?><?php endforeach?>WithCache(&$excuted, PropelPDO $con=null)
  {
      $Criteria=new \Criteria();     
 <?php foreach($Columns as $Column):?>
-     $Criterion=$this->getCriterion(<?php echo $peerBuilder->getColumnConstant($Column)?>);
-     $<?php echo $Column->getPhpName()?>=$Criterion->getValue();
+     $Criterion=$this->getCriterion(<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>);
+     $<?php echo $Column->getName()?>=$Criterion->getValue();
      $Criteria->add($Criterion);
 <?php endforeach?>     
      if(!$this->equals($Criteria)){
          return;
      }
      $excuted=true;
-     $CacheKey="Model:<?php echo $ObjectClassName?><?php foreach($Columns as $Column):?>-<?php echo $Column->getPhpName()?><?php endforeach ?>:<?php foreach($Columns as $Column):?>$<?php echo $Column->getPhpName()?><?php endforeach ?>";
+     <?php echo $CacheKey?>     
      $Cache=$this->getTagcache();
      if($Object=$Cache->get($CacheKey)){
          return $Object;
