@@ -1,1 +1,1 @@
-$CacheKey="Model:<?php echo $ObjectClassName?><?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Keys as $Key):?>."-'".addslashes($<?php echo $Key->getName()?>)."'"<?php endforeach?>;
+$CacheKey="Model:<?php echo $ObjectClassName?><?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Keys as $Key):?>."-'".addslashes($<?php if(isset($use_property)&&$use_property):?>this-><?php endif?><?php echo $Key->getName()?>)."'"<?php endforeach?>;

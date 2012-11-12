@@ -5,11 +5,13 @@ namespace RickySu\CacheableBehaviorBundle\Behavior;
 use \Behavior;
 use RickySu\CacheableBehaviorBundle\Behavior\PeerBuilderModifier;
 use RickySu\CacheableBehaviorBundle\Behavior\QueryBuilderModifier;
+use RickySu\CacheableBehaviorBundle\Behavior\ObjectBuilderModifier;
 
 class CacheableBehavior extends Behavior {
 
     protected $peerBuilderModifier=null;
     protected $queryBuilderModifier=null;
+    protected $objectBuilderModifier=null;
     
     protected function setDefaultParam()
     {
@@ -27,6 +29,13 @@ class CacheableBehavior extends Behavior {
             $this->queryBuilderModifier=new QueryBuilderModifier($this);
         }
         return $this->queryBuilderModifier;
+    }
+    
+    public function getObjectBuilderModifier() {
+        if (is_null($this->objectBuilderModifier)){
+            $this->objectBuilderModifier=new ObjectBuilderModifier($this);
+        }
+        return $this->objectBuilderModifier;
     }
     
 }
