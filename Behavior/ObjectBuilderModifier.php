@@ -27,7 +27,7 @@ class ObjectBuilderModifier {
 
     protected function generateCacheKey($Keys) {
         return $this->behavior->renderTemplate('UniqueKey.php', array(
-                    'ObjectClassName' => $this->objectBuilder->getPeerBuilder()->getObjectClassname(),
+                    'ObjectClassName' => $this->objectBuilder->getPeerBuilder()->getObjectClassName(),
                     'Keys' => $Keys,
                     'use_property' => true,
                 ));
@@ -66,12 +66,12 @@ class ObjectBuilderModifier {
                 continue;
             }
             $this->generateOneToManyCacheScript($script, $refFK);
-        }        
+        }
     }
 
     protected function generateOneToManyCacheScript(&$script, ForeignKey $refFK) {
         $joinedTableObjectBuilder = $this->objectBuilder->getNewObjectBuilder($refFK->getTable());
-        $className = $joinedTableObjectBuilder->getObjectClassname();
+        $className = $joinedTableObjectBuilder->getObjectClassName();
         $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
         $collName = $this->objectBuilder->getRefFKCollVarName($refFK);
         $CacheTags = $this->behavior->renderTemplate('OneToManyRelationCachetagsObject', array(
@@ -94,9 +94,60 @@ class ObjectBuilderModifier {
                 ));
         $parser = new PropelPHPParser($script, true);
         $OldMethod = $parser->findMethod("get$relCol");
-        $OldMethod = $this->replaceMethodName($OldMethod, "get$relCol");        
+        $OldMethod = $this->replaceMethodName($OldMethod, "get$relCol");
         $parser->replaceMethod("get$relCol", $ReplaceScript . $OldMethod);
-        $script = $parser->getCode();        
+        $script = $parser->getCode();
+    }
+
+    protected function addClearOneToManyCache() {
+        foreach ($this->table->getForeignKeys() as $refFK) {
+            $UniqueIndexs = array();
+            if ($refFK->isLocalPrimaryKey()) {
+                //skip one to one relation
+                continue;
+            }
+            $LocalColumn = array();
+            foreach ($refFK->getLocalColumns() as $Col) {
+                $LocalColumn[] = $Col;
+            }
+            foreach ($refFK->getTable()->getUnices() as $Unique) {
+                $Columns = array();
+                foreach ($Unique->getColumns() as $Col) {
+                    $Columns[] = $Col;
+                }
+                $UniqueIndexs[] = $Columns;
+            }
+
+            $isOnetoOneRelation = false;
+            foreach ($UniqueIndexs as $UniqueIndex) {
+                if (count($UniqueIndex) && !array_diff($UniqueIndex, $LocalColumn)) {
+                    //is one to one relation skip
+                    $isOnetoOneRelation = true;
+                    break;
+                }
+            }
+
+            if ($isOnetoOneRelation) {
+                continue;
+            }
+            return $this->generateClearOneToManyCacheScript($refFK);
+        }
+        return '';
+    }
+
+    protected function generateClearOneToManyCacheScript(ForeignKey $refFK) {
+        $Keys=array();
+        foreach($refFK->getForeignColumnObjects() as $Column){
+            $Keys[]=$Column;
+        }
+        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);        
+        $CacheTags = $this->behavior->renderTemplate('OneToManyRelationCachetagsObject', array(
+            'ObjectClassName' => $refFK->getForeignTable()->getPhpName(),
+            'relCol' => $relCol,
+            'Object'=>$refFK->getForeignTable()->getPhpName(),
+            'Keys' => $Keys,
+                ));        
+        return $this->behavior->renderTemplate('clearOneToManyCacheObject',array('CacheTags'=>$CacheTags));
     }
 
     protected function addClearUniqueCache() {
@@ -123,12 +174,24 @@ class ObjectBuilderModifier {
 
     public function postSave($builder) {
         $this->objectBuilder = $builder;
-        return $this->addClearUniqueCache();
+        $script = '';
+        $script.=$this->addClearUniqueCache();
+        $script.=$this->addClearOneToManyCache();
+        if($script!==''){
+            $script=$this->behavior->renderTemplate('getTagcacheforClearCacheObject').$script;
+        }
+        return $script;
     }
 
     public function postDelete($builder) {
         $this->objectBuilder = $builder;
-        return $this->addClearUniqueCache();
+        $script = '';
+        $script.=$this->addClearUniqueCache();
+        $script.=$this->addClearOneToManyCache();
+        if($script!==''){
+            $script=$this->behavior->renderTemplate('getTagcacheforClearCacheObject').$script;
+        }
+        return $script;
     }
 
     public function objectFilter(&$script) {

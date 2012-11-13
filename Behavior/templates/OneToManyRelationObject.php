@@ -4,7 +4,7 @@
  * If the $criteria is not null, it is used to always fetch the results from the database.
  * Otherwise the results are fetched from the database the first time, then cached.
  * Next time the same method is called without $criteria, the cached collection is returned.
- * If this <?php echo $ObjectClassname?> is new, it will return
+ * If this <?php echo $ObjectClassName?> is new, it will return
  * an empty collection or the current collection; the criteria is ignored on a new object.
  *
  * @param Criteria $criteria optional Criteria object to narrow the query
