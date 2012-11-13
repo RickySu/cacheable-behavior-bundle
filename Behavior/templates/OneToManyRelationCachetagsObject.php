@@ -1,0 +1,1 @@
+"Tag:<?php echo $ObjectClassname?>#<?php echo $relCol?><?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Keys as $Key):?>."-'".addslashes($this-><?php echo $Key->getName()?>)."'"<?php endforeach?>
