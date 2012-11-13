@@ -1,1 +1,1 @@
-$TagCache->TagDelete(<?php echo $CacheTags?>);
+$Cache->TagDelete(<?php echo $CacheTags?>);

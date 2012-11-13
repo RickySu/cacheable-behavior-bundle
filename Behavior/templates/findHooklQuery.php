@@ -13,7 +13,10 @@ public function find($con = null)
     foreach($this->getFindOneByUniqueIndexMethods() as $Method){
         $Object=$this->$Method($executed,$con);
         if($executed){
-            return array($Object);
+            if($Object){
+                return array($Object);
+            }
+            return null;
         }
     }
     return parent::find($con);
