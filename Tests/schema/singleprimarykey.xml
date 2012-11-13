@@ -2,6 +2,7 @@
 <database name="cacheable_behavior_database" defaultIdMethod="native">
     <table name="#Namespace#_singlepk">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />        
+        <column name="value" type="INTEGER" /> 
         <behavior name="cacheable">
             <parameter name="primarykey_cache" value="true"/>
         </behavior>

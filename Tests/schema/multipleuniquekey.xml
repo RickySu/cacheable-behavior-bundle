@@ -4,6 +4,7 @@
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" />
         <column name="key2" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" /> 
         <unique>
             <unique-column name="key1" />
             <unique-column name="key2" />

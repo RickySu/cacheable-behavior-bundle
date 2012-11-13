@@ -68,10 +68,12 @@ class QueryBuilderModifierTest extends Base
         $Multipleuniquekey->setKey1(1);
         $Multipleuniquekey->setKey2(2);
         $Multipleuniquekey->save();
-        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->findOne();        
+        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->findOne();
         $this->assertTrue($Multipleuniquekey instanceof \QuerytestMultipleuniquekey,'filterByKey1 filterByKey2 with no cache');
         $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->findOne();
-        $this->assertTrue($Multipleuniquekey instanceof MockContainer,'filterByKey1 filterByKey2 and findOne with cache hit');        
+        $this->assertTrue($Multipleuniquekey instanceof MockContainer,'filterByKey1 filterByKey2 and findOne with cache hit');
+        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->filterById(1)->findOne();        
+        $this->assertTrue($Multipleuniquekey instanceof \QuerytestMultipleuniquekey,'filterByKey1 filterByKey2 filterById with no cache');
         $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey2(2)->filterByKey1(1)->findOne();
         $this->assertTrue($Multipleuniquekey instanceof MockContainer,'filterByKey2 filterByKey1 and findOne with cache hit');
         $Multipleuniquekeys=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->find();

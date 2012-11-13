@@ -3,6 +3,7 @@
     <table name="#Namespace#_multiplepk">
         <column name="pk1" required="true" primaryKey="true" type="INTEGER" />
         <column name="pk2" required="true" primaryKey="true" type="INTEGER" />
+        <column name="value" type="INTEGER" /> 
         <behavior name="cacheable">            
             <parameter name="primarykey_cache" value="true"/>
         </behavior>
