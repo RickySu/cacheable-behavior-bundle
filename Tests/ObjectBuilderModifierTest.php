@@ -129,4 +129,46 @@ class ObjectBuilderModifierTest extends Base
         $Object2s=$Object1->getObjecttestOnetoone2sRelatedByKey1();        
         $this->assertTrue($Object2s==null,'object1 get one to one object2 relative by key1 clear cache after delete');                
     }
+    
+
+    public function testOneToOneRelationCacheMultiple(){
+        $this->simpleBuild('one_to_one_relation_multiple',"Objecttest");
+        $Object1 = new \ObjecttestOnetoone1Multiple();
+        $Object1->setId1(1);
+        $Object1->setId2(1);
+        $Object1->setKey1(2);
+        $Object1->setKey2(2);
+        $Object1->save();
+        $Object2 = new \ObjecttestOnetoone2Multiple();
+        $Object2->setId1(1);
+        $Object2->setId2(1);
+        $Object2->setKey1(2);
+        $Object2->setKey2(2);
+        $Object2->save();
+        $Object2=$Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple,'object1 get one to one object2 relative by id with no cache');
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));        
+        $Object2=$Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+        $this->assertTrue($Object2 instanceof MockContainer,'object1 get one to one object2 relative by id with cache');
+        $Object2s=$Object1->getObjecttestOnetoone2MultiplesRelatedByKey1Key2();
+        $this->assertTrue($Object2s[0] instanceof \ObjecttestOnetoone2Multiple,'object1 get one to one object2s relative by key1 with no cache');
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));
+        $Object2s=$Object1->getObjecttestOnetoone2MultiplesRelatedByKey1Key2();
+        $this->assertTrue($Object2s[0] instanceof MockContainer,'object1 get one to one object2 relative by key1 with cache');        
+        $Object2->setValue(2);
+        $Object2->save();
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));
+        $Object2=$Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple,'object1 get one to one object2 relative by id clear cache after save');
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));
+        $Object2s=$Object1->getObjecttestOnetoone2MultiplesRelatedByKey1Key2();        
+        $this->assertTrue($Object2s[0] instanceof \ObjecttestOnetoone2Multiple,'object1 get one to one object2 relative by key1 clear cache after save');
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));
+        $Object2->delete();
+        $Object2=$Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+        $this->assertTrue($Object2==null,'object1 get one to one object2 relative by id clear cache after delete');        
+        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1,1));
+        $Object2s=$Object1->getObjecttestOnetoone2MultiplesRelatedByKey1Key2();        
+        $this->assertTrue($Object2s==null,'object1 get one to one object2 relative by key1 clear cache after delete');                
+    }    
 }
