@@ -29,5 +29,9 @@ class MockContainer {
     public function __unset($name) {
         unset($this->Object->$name);
     }
+    
+    public function __toString() {
+        return $this->Object;
+    }
 
 }
