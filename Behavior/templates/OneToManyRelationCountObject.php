@@ -10,13 +10,10 @@
      * @throws PropelException
      */ 
     public function count<?php echo $relCol?>($criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-         if($criteria===null && $this-><?php echo $collName?>){
-             return $this-><?php echo $collName?>;
-         }
+    {    
          if($this->isNew()){
              return $this->rebuild_count<?php echo $relCol?>($criteria,$distinct,$con);
-         }
+         }         
          $CriteriaHash='';
          $TagCacheTags=array();
          if($criteria){
@@ -26,9 +23,9 @@
                  $criteria->remove($Key);
                  $criteria->add($Val);
             }
-            $CriteriaHash='#'.md5($criteria->toString());
-            $TagCacheTags[]=<?php echo $CacheTags?>;
+            $CriteriaHash='#'.md5($criteria->toString());            
          }
+         $TagCacheTags[]=<?php echo $CacheTags?>;         
          $CacheKey=<?php echo $CacheKey?>;
          $Cache=$this->getTagcache();
          if($Counts=$Cache->get($CacheKey)){
@@ -36,6 +33,6 @@
          }
          if($Counts=$this->rebuild_count<?php echo $relCol?>($criteria,$distinct,$con)){
              $Cache->set($CacheKey,$Counts,$TagCacheTags);
-         }
+         }         
          return $Counts;
     }

@@ -2,7 +2,7 @@
 
 namespace RickySu\CacheableBehaviorBundle\Tests\Mock;
 
-class MockContainer {
+class MockContainer implements \arrayaccess {
 
     protected $Object;
 
@@ -30,8 +30,23 @@ class MockContainer {
         unset($this->Object->$name);
     }
     
-    public function __toString() {
-        return $this->Object;
+    public function __toString() {        
+        return "{$this->Object}";
     }
-
+    
+    public function offsetSet($offset, $value){
+        $this->Object[$offset]=$value;
+    }
+    
+    public function offsetExists($offset){
+        return isset($this->Object[$offset]);
+    }
+    
+    public function offsetUnset($offset) {
+        unset($this->Object[$offset]);
+    }
+    
+    public function offsetGet($offset) {
+        return $this->Object[$offset];
+    }
 }

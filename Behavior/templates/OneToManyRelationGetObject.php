@@ -31,9 +31,9 @@
                  $criteria->remove($Key);
                  $criteria->add($Val);
             }
-            $CriteriaHash='#'.md5($criteria->toString());
-            $TagCacheTags[]=<?php echo $CacheTags?>;
+            $CriteriaHash='#'.md5($criteria->toString());            
          }
+         $TagCacheTags[]=<?php echo $CacheTags?>;
          $CacheKey=<?php echo $CacheKey?>;
          $Cache=$this->getTagcache();
          if($Objects=$Cache->get($CacheKey)){

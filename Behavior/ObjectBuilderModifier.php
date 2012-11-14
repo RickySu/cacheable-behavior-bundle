@@ -224,8 +224,8 @@ class ObjectBuilderModifier {
     }    
 
     protected function generateClearOneToManyCacheGetScript(ForeignKey $refFK) {
-        $Keys = array();
-        foreach ($refFK->getForeignColumnObjects() as $Column) {
+        $Keys = array();        
+        foreach ($refFK->getTable()->getPrimaryKey() as $Column) {
             $Keys[] = $Column;
         }
         $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
@@ -240,7 +240,7 @@ class ObjectBuilderModifier {
     
     protected function generateClearOneToManyCacheCountScript(ForeignKey $refFK) {
         $Keys = array();
-        foreach ($refFK->getForeignColumnObjects() as $Column) {
+        foreach ($refFK->getTable()->getPrimaryKey() as $Column) {
             $Keys[] = $Column;
         }
         $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
