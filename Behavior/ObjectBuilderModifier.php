@@ -58,6 +58,7 @@ class ObjectBuilderModifier {
             foreach ($UniqueIndexs as $UniqueIndex) {
                 if (count($UniqueIndex) && !array_diff($UniqueIndex, $LocalColumn)) {
                     //is one to one relation skip
+                    $this->generateOneToOneCacheScript($script, $refFK);
                     $isOnetoOneRelation = true;
                     break;
                 }
@@ -67,6 +68,26 @@ class ObjectBuilderModifier {
             }
             $this->generateOneToManyCacheScript($script, $refFK);
         }
+    }
+
+    protected function generateOneToOneCacheScript(&$script, ForeignKey $refFK) {
+        if ($this->behavior->getParameter('uniqueindex_relation') == 'false') {
+            return;
+        }
+        $joinedTableObjectBuilder = $this->objectBuilder->getNewObjectBuilder($refFK->getTable());
+        $className = $joinedTableObjectBuilder->getObjectClassName();
+        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, false);
+        $relCols = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
+        $ReplaceScript = $this->behavior->renderTemplate('OneToOneRelationObject', array(
+            'className' => $className,
+            'relCol' => $relCol,
+            'relCols' => $relCols,
+                ));
+        $parser = new PropelPHPParser($script, true);
+        $OldMethod = $parser->findMethod("get$relCols");
+        $OldMethod = $this->replaceMethodName($OldMethod, "get$relCols");
+        $parser->replaceMethod("get$relCols", $ReplaceScript . $OldMethod);
+        $script = $parser->getCode();
     }
 
     protected function generateOneToManyCacheScript(&$script, ForeignKey $refFK) {
@@ -136,18 +157,18 @@ class ObjectBuilderModifier {
     }
 
     protected function generateClearOneToManyCacheScript(ForeignKey $refFK) {
-        $Keys=array();
-        foreach($refFK->getForeignColumnObjects() as $Column){
-            $Keys[]=$Column;
+        $Keys = array();
+        foreach ($refFK->getForeignColumnObjects() as $Column) {
+            $Keys[] = $Column;
         }
-        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);        
+        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
         $CacheTags = $this->behavior->renderTemplate('OneToManyRelationCachetagsObject', array(
             'ObjectClassName' => $refFK->getForeignTable()->getPhpName(),
             'relCol' => $relCol,
-            'Object'=>$refFK->getForeignTable()->getPhpName(),
+            'Object' => $refFK->getForeignTable()->getPhpName(),
             'Keys' => $Keys,
-                ));        
-        return $this->behavior->renderTemplate('clearOneToManyCacheObject',array('CacheTags'=>$CacheTags));
+                ));
+        return $this->behavior->renderTemplate('clearOneToManyCacheObject', array('CacheTags' => $CacheTags));
     }
 
     protected function addClearUniqueCache() {
@@ -177,8 +198,8 @@ class ObjectBuilderModifier {
         $script = '';
         $script.=$this->addClearUniqueCache();
         $script.=$this->addClearOneToManyCache();
-        if($script!==''){
-            $script=$this->behavior->renderTemplate('getTagcacheforClearCacheObject').$script;
+        if ($script !== '') {
+            $script = $this->behavior->renderTemplate('getTagcacheforClearCacheObject') . $script;
         }
         return $script;
     }
@@ -188,8 +209,8 @@ class ObjectBuilderModifier {
         $script = '';
         $script.=$this->addClearUniqueCache();
         $script.=$this->addClearOneToManyCache();
-        if($script!==''){
-            $script=$this->behavior->renderTemplate('getTagcacheforClearCacheObject').$script;
+        if ($script !== '') {
+            $script = $this->behavior->renderTemplate('getTagcacheforClearCacheObject') . $script;
         }
         return $script;
     }
