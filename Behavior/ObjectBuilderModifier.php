@@ -39,18 +39,19 @@ class ObjectBuilderModifier {
         }
         foreach ($this->table->getCrossFks() as $fkList) {
             list($refFK, $crossFK) = $fkList;
-            $this->generateManyToManyCacheScript($script, $refFK, $crossFK,'Get');
+            $this->generateManyToManyCacheScript($script, $refFK, $crossFK, 'Get');
+            $this->generateManyToManyCacheScript($script, $refFK, $crossFK, 'Count');
         }
     }
 
-    protected function generateManyToManyCacheScript(&$script, ForeignKey $refFK, ForeignKey $crossFK,$Method='Get') {
+    protected function generateManyToManyCacheScript(&$script, ForeignKey $refFK, ForeignKey $crossFK, $Method = 'Get') {
         $relCol = $this->objectBuilder->getFKPhpNameAffix($crossFK, true);
         $relatedObjectClassName = $this->objectBuilder->getNewStubObjectBuilder($crossFK->getForeignTable())->getClassname();
         $selfRelationName = $this->objectBuilder->getFKPhpNameAffix($refFK, $plural = false);
         $relatedQueryClassName = $this->objectBuilder->getNewStubQueryBuilder($crossFK->getForeignTable())->getClassname();
         $crossRefTableName = $crossFK->getTableName();
         $collName = 'coll' . $this->objectBuilder->getFKPhpNameAffix($crossFK, true);
-        $CacheTags = $this->behavior->renderTemplate("ManyToManyRelationCachetags{$Method}Object", array(
+        $CacheTag = $this->behavior->renderTemplate("ManyToManyRelationCachetags{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,
             'Keys' => $this->table->getPrimaryKey(),
@@ -68,9 +69,9 @@ class ObjectBuilderModifier {
             'collName' => $collName,
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'CacheKey' => $CacheKey,
-            'CacheTags' => $CacheTags,
+            'CacheTag' => $CacheTag,
                 ));
-        $MethodName=strtolower($Method).$relCol;
+        $MethodName = strtolower($Method) . $relCol;
         $parser = new PropelPHPParser($script, true);
         $OldMethod = $parser->findMethod($MethodName);
         $OldMethod = $this->replaceMethodName($OldMethod, $MethodName);
@@ -111,35 +112,37 @@ class ObjectBuilderModifier {
             if ($isOnetoOneRelation) {
                 continue;
             }
-            $this->generateOneToManyCacheScript($script, $refFK,'Get');
-            $this->generateOneToManyCacheScript($script, $refFK,'Count');
+            $this->generateOneToManyCacheScript($script, $refFK, 'Get');
+            $this->generateOneToManyCacheScript($script, $refFK, 'Count');
         }
-    }   
+    }
 
-    protected function generateOneToManyCacheScript(&$script, ForeignKey $refFK,$Method='Get') {
+    protected function generateOneToManyCacheScript(&$script, ForeignKey $refFK, $Method = 'Get') {
         $joinedTableObjectBuilder = $this->objectBuilder->getNewObjectBuilder($refFK->getTable());
         $className = $joinedTableObjectBuilder->getObjectClassName();
         $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
         $collName = $this->objectBuilder->getRefFKCollVarName($refFK);
-        $CacheTags = $this->behavior->renderTemplate("OneToManyRelationCachetags{$Method}Object", array(
+        $CacheTag = $this->behavior->renderTemplate("OneToManyRelationCachetags{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,
-            'Keys' => $this->table->getPrimaryKey(),
-                ));
+            'Keys' => $refFK->getForeignColumnObjects(),
+            'Cols' => $refFK->getForeignColumnObjects(),
+                ));        
         $CacheKey = $this->behavior->renderTemplate("OneToManyRelationCacheKey{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,
-            'Keys' => $this->table->getPrimaryKey(),
+            'Keys' => $refFK->getForeignColumnObjects(),
+            'Cols' => $refFK->getForeignColumnObjects(),
                 ));
         $ReplaceScript = $this->behavior->renderTemplate("OneToManyRelation{$Method}Object", array(
             'CacheKey' => $CacheKey,
-            'CacheTags' => $CacheTags,
+            'CacheTag' => $CacheTag,
             'className' => $className,
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'collName' => $collName,
             'relCol' => $relCol,
                 ));
-        $MethodName=strtolower($Method).$relCol;
+        $MethodName = strtolower($Method) . $relCol;
         $parser = new PropelPHPParser($script, true);
         $OldMethod = $parser->findMethod($MethodName);
         $OldMethod = $this->replaceMethodName($OldMethod, $MethodName);
@@ -155,17 +158,43 @@ class ObjectBuilderModifier {
             list($refFK, $crossFK) = $fkList;
             $Script = '';
             if ($ClearGetCache) {
-                $Script.=$this->generateClearManyToManyCacheGetScript($refFK, $crossFK);
+                $Script.=$this->generateClearManyToManyCacheScript($refFK, $crossFK, 'Get');
             }
             if ($ClearCountCache) {
-                $Script.=$this->generateClearManyToManyCacheCountScript($refFK, $crossFK);
+                $Script.=$this->generateClearManyToManyCacheScript($refFK, $crossFK, 'Count');
             }
             return $Script;
         }
         return '';
     }
 
+    protected function generateClearManyToManyCacheScript(ForeignKey $refFK, ForeignKey $crossFK, $Method = 'Get') {
+        $Keys = array();
+        $crossRelCols=$this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
+        echo "{$this->table->getPhpName()}\n";
+        echo "get$crossRelCols()\n";
+        echo $crossFK->getLocalColumn()->getPhpName()."\n";
+        echo "refFK => {$refFK->getForeignTable()->getPhpName()}\n";
+        echo "crossFK => {$crossFK->getForeignTable()->getPhpName()}\n";
+        //die;
+        return;
+        foreach ($refFK->getTable()->getPrimaryKey() as $Column) {
+            $Keys[] = $Column;
+        }
+        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
+        $CacheTags = $this->behavior->renderTemplate("OneToManyRelationCachetags{$Method}Object", array(
+            'ObjectClassName' => $refFK->getForeignTable()->getPhpName(),
+            'relCol' => $relCol,
+            'Object' => $refFK->getForeignTable()->getPhpName(),
+            'Keys' => $Keys,
+                ));
+        return $this->behavior->renderTemplate("clearOneToManyCache{$Method}Object", array('CacheTags' => $CacheTags));
+    }
+
     protected function addClearOneToManyCache($ClearGetCache = true, $ClearCountCache = true) {
+        if ($this->behavior->getParameter('relation_cache') == 'false') {
+            return;
+        }
         foreach ($this->table->getForeignKeys() as $refFK) {
             $UniqueIndexs = array();
             if ($refFK->isLocalPrimaryKey()) {
@@ -198,16 +227,15 @@ class ObjectBuilderModifier {
             }
             $Script = '';
             if ($ClearGetCache) {
-                $Script.=$this->generateClearOneToManyCacheScript($refFK,'Get');
+                $Script.=$this->generateClearOneToManyCacheScript($refFK, 'Get');
             }
             if ($ClearCountCache) {
-                $Script.=$this->generateClearOneToManyCacheScript($refFK,'Count');
+                $Script.=$this->generateClearOneToManyCacheScript($refFK, 'Count');
             }
             return $Script;
         }
         return '';
     }
-
 
     protected function generateOneToOneGetCacheScript(&$script, ForeignKey $refFK) {
         if ($this->behavior->getParameter('uniqueindex_relation') == 'false') {
@@ -228,18 +256,16 @@ class ObjectBuilderModifier {
         $parser->replaceMethod("get$relCols", $ReplaceScript . $OldMethod);
         $script = $parser->getCode();
     }
-    
-    protected function generateClearOneToManyCacheScript(ForeignKey $refFK,$Method='Get') {
-        $Keys = array();
-        foreach ($refFK->getTable()->getPrimaryKey() as $Column) {
-            $Keys[] = $Column;
-        }
+
+    protected function generateClearOneToManyCacheScript(ForeignKey $refFK, $Method = 'Get') {
+        $Keys = array();        
         $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
         $CacheTags = $this->behavior->renderTemplate("OneToManyRelationCachetags{$Method}Object", array(
             'ObjectClassName' => $refFK->getForeignTable()->getPhpName(),
             'relCol' => $relCol,
             'Object' => $refFK->getForeignTable()->getPhpName(),
-            'Keys' => $Keys,
+            'Keys' => $refFK->getForeignColumnObjects(),
+            'Cols' => $refFK->getLocalColumnObjects(),
                 ));
         return $this->behavior->renderTemplate("clearOneToManyCache{$Method}Object", array('CacheTags' => $CacheTags));
     }
@@ -266,11 +292,12 @@ class ObjectBuilderModifier {
         return $this->behavior->renderTemplate('clearUniqueIndexCacheObject', array('CacheKeys' => $CacheKeys));
     }
 
-    public function postSave($builder) {
+    public function postUpdate($builder) {
         $this->objectBuilder = $builder;
         $script = '';
         $script.=$this->addClearUniqueCache();
-        $script.=$this->addClearOneToManyCache(true, false);
+        $script.=$this->addClearOneToManyCache(true, false); //clear getObjects
+        $script.=$this->addClearManyToManyCache(true, false); //clear getObjects
         if ($script !== '') {
             $script = $this->behavior->renderTemplate('getTagcacheforClearCacheObject') . $script;
         }
@@ -280,7 +307,8 @@ class ObjectBuilderModifier {
     public function postInsert($builder) {
         $this->objectBuilder = $builder;
         $script = '';
-        $script.=$this->addClearOneToManyCache(false, true);
+        $script.=$this->addClearOneToManyCache(true, true); //clear getObjects , countObjects
+        $script.=$this->addClearManyToManyCache(true, true); //clear getObjects , countObjects
         if ($script !== '') {
             $script = $this->behavior->renderTemplate('getTagcacheforClearCacheObject') . $script;
         }
@@ -291,7 +319,8 @@ class ObjectBuilderModifier {
         $this->objectBuilder = $builder;
         $script = '';
         $script.=$this->addClearUniqueCache();
-        $script.=$this->addClearOneToManyCache(true, true);
+        $script.=$this->addClearOneToManyCache(true, true); //clear getObjects , countObjects
+        $script.=$this->addClearManyToManyCache(true, true); //clear getObjects , countObjects
         if ($script !== '') {
             $script = $this->behavior->renderTemplate('getTagcacheforClearCacheObject') . $script;
         }

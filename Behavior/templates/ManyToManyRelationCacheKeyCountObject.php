@@ -1,0 +1,1 @@
+"Model:<?php echo $ObjectClassName?>#count<?php echo $relCol?>#distinct:".($distinct?'1':'0')."#{$CriteriaHash}<?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Keys as $Key):?>."-'".addslashes($this-><?php echo $Key->getName()?>)."'"<?php endforeach?>

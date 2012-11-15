@@ -1,6 +1,17 @@
 
 
     /**
+     * Gets a collection of <?php echo $relatedObjectClassName?> objects cache tag related by a many-to-many relationship
+     * to the current object by way of the <?php echo $crossRefTableName?> cross-reference table.
+     *
+     * @return string
+     */     
+    public function get<?php echo $relCol?>CacheTag()
+    {
+        return <?php echo $CacheTag?>;
+    }
+    
+    /**
      * Gets a collection of <?php echo $relatedObjectClassName?> objects related by a many-to-many relationship
      * to the current object by way of the <?php echo $crossRefTableName?> cross-reference table.
      *
@@ -34,7 +45,7 @@
             }
             $CriteriaHash='#'.md5($criteria->toString());            
          }
-         $TagCacheTags[]=<?php echo $CacheTags?>;
+         $TagCacheTags[]=$this->get<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
          $Cache=$this->getTagcache();
          if($Objects=$Cache->get($CacheKey)){

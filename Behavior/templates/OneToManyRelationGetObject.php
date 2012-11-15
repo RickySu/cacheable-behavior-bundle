@@ -1,6 +1,16 @@
 
 
     /**
+     * Gets an array of <?php echo $className?> objects cache tag which contain a foreign key that references this object.
+     *
+     * @return string
+     */
+     public function get<?php echo $relCol?>CacheTag()
+     {
+         return <?php echo $CacheTag?>;
+     }
+
+    /**
      * Gets an array of <?php echo $className?> objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
@@ -33,7 +43,7 @@
             }
             $CriteriaHash='#'.md5($criteria->toString());            
          }
-         $TagCacheTags[]=<?php echo $CacheTags?>;
+         $TagCacheTags[]=$this->get<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
          $Cache=$this->getTagcache();
          if($Objects=$Cache->get($CacheKey)){

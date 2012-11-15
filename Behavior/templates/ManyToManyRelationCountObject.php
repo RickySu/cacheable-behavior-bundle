@@ -1,24 +1,26 @@
 
 
     /**
-     * Returns the number of related <?php echo $className?> objects cache tag.
+     * Gets the number of <?php echo $relatedObjectClassName?> objects cache tag related by a many-to-many relationship
+     * to the current object by way of the <?php echo $crossRefTableName?> cross-reference table.
      *
      * @return string
-     */ 
+     */
     public function count<?php echo $relCol?>CacheTag()
     {
-        return <?php echo $CacheTag?>;
+        return <?php echo $CacheTags?>;
     }
     
     /**
-     * Returns the number of related <?php echo $className?> objects.
+     * Gets the number of <?php echo $relatedObjectClassName?> objects related by a many-to-many relationship
+     * to the current object by way of the <?php echo $crossRefTableName?> cross-reference table.
      *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int  Count of related <?php echo $className?> objects.
-     * @throws PropelException
-     */ 
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param boolean $distinct Set to true to force count distinct
+     * @param PropelPDO $con Optional connection object
+     *
+     * @return int the number of related <?php echo $relatedObjectClassName?> objects
+     */
     public function count<?php echo $relCol?>($criteria = null, $distinct = false, PropelPDO $con = null)
     {    
          if($this->isNew()){
