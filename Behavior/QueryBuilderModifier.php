@@ -68,7 +68,7 @@ class QueryBuilderModifier {
     }
 
     protected function addPKCache(&$script) {
-        if ($this->behavior->getParameter('primarykey_cache') != 'true') {
+        if ($this->behavior->getParameter('primarykey_cache') == 'false') {
             return;
         }
         $parser = new PropelPHPParser($script, true);
@@ -88,7 +88,7 @@ class QueryBuilderModifier {
     }
 
     protected function addUniqueIndexCache(&$UniqueIndexs) {
-        if ($this->behavior->getParameter('uniqueindex_cache') != 'true') {
+        if ($this->behavior->getParameter('uniqueindex_cache') == 'false') {
             return;
         }
         $Script = '';
