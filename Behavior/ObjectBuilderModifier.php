@@ -54,12 +54,14 @@ class ObjectBuilderModifier {
         $CacheTag = $this->behavior->renderTemplate("ManyToManyRelationCachetags{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,
-            'Keys' => $this->table->getPrimaryKey(),
+            'Keys' => $refFK->getForeignColumnObjects(),
+            'Cols' => $refFK->getForeignColumnObjects(),
                 ));
         $CacheKey = $this->behavior->renderTemplate("ManyToManyRelationCacheKey{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,
-            'Keys' => $this->table->getPrimaryKey(),
+            'Keys' => $refFK->getForeignColumnObjects(),
+            'Cols' => $refFK->getForeignColumnObjects(),
                 ));
         $ReplaceScript = $this->behavior->renderTemplate("ManyToManyRelation{$Method}Object", array(
             'relCol' => $relCol,
@@ -168,27 +170,16 @@ class ObjectBuilderModifier {
         return '';
     }
 
-    protected function generateClearManyToManyCacheScript(ForeignKey $refFK, ForeignKey $crossFK, $Method = 'Get') {
-        $Keys = array();
-        $crossRelCols=$this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
-        echo "{$this->table->getPhpName()}\n";
-        echo "get$crossRelCols()\n";
-        echo $crossFK->getLocalColumn()->getPhpName()."\n";
-        echo "refFK => {$refFK->getForeignTable()->getPhpName()}\n";
-        echo "crossFK => {$crossFK->getForeignTable()->getPhpName()}\n";
-        //die;
-        return;
-        foreach ($refFK->getTable()->getPrimaryKey() as $Column) {
-            $Keys[] = $Column;
-        }
-        $relCol = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
-        $CacheTags = $this->behavior->renderTemplate("OneToManyRelationCachetags{$Method}Object", array(
-            'ObjectClassName' => $refFK->getForeignTable()->getPhpName(),
-            'relCol' => $relCol,
-            'Object' => $refFK->getForeignTable()->getPhpName(),
-            'Keys' => $Keys,
+    protected function generateClearManyToManyCacheScript(ForeignKey $refFK, ForeignKey $crossFK, $Method = 'Get') {        
+        $relCols=$this->objectBuilder->getFKPhpNameAffix($refFK, true);
+        $crossRelCols = $this->objectBuilder->getRefFKPhpNameAffix($refFK, true);
+        return $this->behavior->renderTemplate("clearManyToManyCache{$Method}Object", array(
+            'ObjectClassName' => $crossFK->getForeignTable()->getPhpName(),
+            'crossRelCols'=>$crossRelCols,
+            'relCol' => $relCols,            
+            'Keys' => $crossFK->getForeignColumnObjects(),
+            'Cols'=>$crossFK->getLocalColumnObjects(),
                 ));
-        return $this->behavior->renderTemplate("clearOneToManyCache{$Method}Object", array('CacheTags' => $CacheTags));
     }
 
     protected function addClearOneToManyCache($ClearGetCache = true, $ClearCountCache = true) {

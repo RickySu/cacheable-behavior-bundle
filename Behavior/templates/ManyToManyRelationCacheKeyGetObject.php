@@ -1,1 +1,1 @@
-"Model:<?php echo $ObjectClassName?>#get<?php echo $relCol?>#{$CriteriaHash}<?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Keys as $Key):?>."-'".addslashes($this-><?php echo $Key->getName()?>)."'"<?php endforeach?>
+"Model:<?php echo $ObjectClassName?>#get<?php echo $relCol?>#{$CriteriaHash}<?php foreach($Keys as $Key):?>-<?php echo $Key->getName()?><?php endforeach ?>:"<?php foreach($Cols as $Col):?>."-'".addslashes($this-><?php echo $Col->getName()?>)."'"<?php endforeach?>

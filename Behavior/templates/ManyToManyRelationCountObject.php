@@ -8,7 +8,7 @@
      */
     public function count<?php echo $relCol?>CacheTag()
     {
-        return <?php echo $CacheTags?>;
+        return <?php echo $CacheTag?>;
     }
     
     /**
