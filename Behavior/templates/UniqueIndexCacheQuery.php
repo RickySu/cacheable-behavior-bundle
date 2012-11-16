@@ -10,9 +10,11 @@
  {
      $Criteria=new \Criteria();     
 <?php foreach($Columns as $Column):?>
-     $Criterion=$this->getCriterion(<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>);
-     $<?php echo $Column->getName()?>=$Criterion->getValue();
-     $Criteria->add($Criterion);
+     if(isset($this->map[<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>])){
+         $Criterion=$this->map[<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>];
+         $<?php echo $Column->getName()?>=$Criterion->getValue();
+         $Criteria->add($Criterion);
+     }     
 <?php endforeach?>     
      if(!$this->equals($Criteria)){
          return;

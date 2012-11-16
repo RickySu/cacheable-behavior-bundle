@@ -7,11 +7,7 @@
         <unique>
             <unique-column name="key1" />
         </unique>                
-        <behavior name="cacheable">
-            <parameter name="primarykey_cache" value="true"/>
-            <parameter name="uniqueindex_cache" value="true"/>
-            <parameter name="relation_cache" value="true"/>
-        </behavior>
+        <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_onetoone2">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
@@ -26,10 +22,6 @@
         <foreign-key foreignTable="#Namespace#_onetoone1" onDelete="setnull" onUpdate="cascade">
             <reference local="key1" foreign="key1" />
         </foreign-key>
-        <behavior name="cacheable">
-            <parameter name="primarykey_cache" value="true"/>
-            <parameter name="uniqueindex_cache" value="true"/>
-            <parameter name="relation_cache" value="true"/>
-        </behavior>
+        <behavior name="cacheable"/>
     </table>    
 </database>

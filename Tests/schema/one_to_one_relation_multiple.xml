@@ -10,11 +10,7 @@
             <unique-column name="key1" />
             <unique-column name="key2" />
         </unique>                
-        <behavior name="cacheable">
-            <parameter name="primarykey_cache" value="true"/>
-            <parameter name="uniqueindex_cache" value="true"/>
-            <parameter name="relation_cache" value="true"/>
-        </behavior>
+        <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_onetoone2_multiple">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
@@ -34,10 +30,6 @@
             <reference local="key1" foreign="key1" />
             <reference local="key2" foreign="key2" />
         </foreign-key>
-        <behavior name="cacheable">
-            <parameter name="primarykey_cache" value="true"/>
-            <parameter name="uniqueindex_cache" value="true"/>
-            <parameter name="relation_cache" value="true"/>
-        </behavior>
+        <behavior name="cacheable"/>
     </table>    
 </database>

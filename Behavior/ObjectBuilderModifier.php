@@ -56,7 +56,7 @@ class ObjectBuilderModifier {
             'relCol' => $relCol,
             'Keys' => $refFK->getForeignColumnObjects(),
             'Cols' => $refFK->getForeignColumnObjects(),
-                ));
+                ));        
         $CacheKey = $this->behavior->renderTemplate("ManyToManyRelationCacheKey{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getObjectClassName(),
             'relCol' => $relCol,

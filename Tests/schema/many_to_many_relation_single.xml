@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="cacheable_behavior_database" defaultIdMethod="native">
+    <table name="#Namespace#_manytomany1">
+        <column name="id" required="true" primaryKey="true" type="INTEGER" />
+        <column name="table1key" required="true" type="INTEGER" /> 
+        <column name="value" type="INTEGER" /> 
+        <unique>
+            <unique-column name="table1key" />
+        </unique>                
+        <behavior name="cacheable"/>
+    </table>
+    <table name="#Namespace#_manytomany2">
+        <column name="id" required="true" primaryKey="true" type="INTEGER" />
+        <column name="table2key" required="true" type="INTEGER" /> 
+        <column name="value" type="INTEGER" /> 
+        <unique>
+            <unique-column name="table2key" />
+        </unique>
+        <behavior name="cacheable"/>
+    </table>
+    <table name="#Namespace#_manytomany1_#Namespace#_manytomany2" isCrossRef="true">
+        <behavior name="cacheable"/>
+        <column name="key1" type="bigint" primaryKey="true" />
+        <column name="key2" type="bigint" primaryKey="true" />
+        <foreign-key foreignTable="#Namespace#_manytomany1" onDelete="cascade" onUpdate="cascade">
+            <reference local="key2" foreign="table1key" />
+        </foreign-key>
+        <foreign-key foreignTable="#Namespace#_manytomany2" onDelete="cascade" onUpdate="cascade">
+            <reference local="key1" foreign="table2key" />
+        </foreign-key>        
+    </table>
+</database>

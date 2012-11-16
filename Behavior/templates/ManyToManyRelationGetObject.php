@@ -7,7 +7,7 @@
      * @return string
      */     
     public function get<?php echo $relCol?>CacheTag()
-    {
+    {        
         return <?php echo $CacheTag?>;
     }
     
@@ -27,7 +27,7 @@
      * @return PropelObjectCollection|<?php echo $relatedObjectClassName?>[] List of <?php echo $relatedObjectClassName?> objects
      */     
     public function get<?php echo $relCol?>($criteria = null, PropelPDO $con = null)
-    {
+    {         
          if($criteria===null && $this-><?php echo $collName?>){
              return $this-><?php echo $collName?>;
          }
@@ -47,12 +47,16 @@
          }
          $TagCacheTags[]=$this->get<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
-         $Cache=$this->getTagcache();
-         if($Objects=$Cache->get($CacheKey)){
+         $Cache=$this->getTagcache();                  
+         if($Objects=$Cache->get($CacheKey)){         
              if($criteria!==null){
                  $this-><?php echo $collName?> = $Objects;
              }
              return $Objects;
+         }
+         if($Objects=$this->rebuild_get<?php echo $relCol?>($criteria,$con)){
+             $Cache->set($CacheKey,$Objects,$TagCacheTags);
          }         
-        return $this->rebuild_get<?php echo $relCol?>($criteria,$con);
+         return $Objects;
+         
     }

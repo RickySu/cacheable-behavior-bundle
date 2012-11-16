@@ -3,18 +3,22 @@
     <table name="#Namespace#_onetomany1">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" /> 
+        <column name="key2" required="true" type="INTEGER" /> 
         <column name="value" type="INTEGER" /> 
         <unique>
             <unique-column name="key1" />
+            <unique-column name="key2" />
         </unique>                
         <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_onetomany2">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" /> 
+        <column name="key2" required="true" type="INTEGER" /> 
         <column name="value" type="INTEGER" /> 
         <foreign-key foreignTable="#Namespace#_onetomany1" onDelete="setnull" onUpdate="cascade">
-            <reference local="key1" foreign="key1" />
+            <reference local="key1" foreign="key2" />
+            <reference local="key2" foreign="key1" />
         </foreign-key>
         <behavior name="cacheable"/>
     </table>    
