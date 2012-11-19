@@ -288,16 +288,14 @@ class ObjectBuilderModifierTest extends Base {
         $this->assertTrue($CountObject2s === 1, 'object1 get one to many object2 relative by key1 with no cache');
     }
 */
-    public function testManyToManyRelationCacheMultiple() {
+    public function testManyToManyRelationCacheSingle() {
         $this->simpleBuild('many_to_many_relation_single', "Objecttest");        
         $Object1 = new \ObjecttestManytomany1();
         $Object1->setId(1);
-        $Object1->setTable1key(1);
-        $Object1->save();
+        $Object1->setTable1key(1);        
         $Object2 = new \ObjecttestManytomany2();
         $Object2->setId(2);
-        $Object2->setTable2key(2);                
-        $Object2->save();
+        $Object2->setTable2key(2);                        
         $Object1->addObjecttestManytomany2($Object2);
         $Object1->save();
 
@@ -326,29 +324,97 @@ class ObjectBuilderModifierTest extends Base {
         $this->assertInstanceOf('\\ObjecttestManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
         $this->assertTrue($Object1->countObjecttestManytomany2s() instanceof MockContainer, 'object1 count many to many object2 relative by key1 with cache');
         $this->assertEquals((int) (string) $Object1->countObjecttestManytomany2s(), 1, 'object1 count many to many object2 relative by key1 with cache');
-return;
+
         // insert an object will clear all cache.
         $Object3 = new \ObjecttestManytomany2();
-        $Object3->setId(2);
-        $Object3->setKey1(2);
-        $Object3->save();
+        $Object3->setId(3);
+        $Object3->setTable2key(3);
+        $Object1->addObjecttestManytomany2($Object3);
+        $Object1->save();
+        
         $Object1 = \ObjecttestManytomany1Query::create()->findPk(1);
         $Object2s = $Object1->getObjecttestManytomany2s();
-        $CountObject2s = $Object1->countObjecttestManytomany2s();
-        $this->assertEquals(count($Object2s), 2, 'count object1 get one to many object2 relative by key1 with no cache');
-        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get one to many object2 relative by key1 with cache');
-        $this->assertInstanceOf('\\ObjecttestManytomany2', $Object2s[0], 'object1 get one to many object2 relative by key1 with no cache');
-        $this->assertTrue($CountObject2s === 2, 'object1 get one to many object2 relative by key1 with no cache');
+        $CountObject2s = $Object1->countObjecttestManytomany2s();        
+        $this->assertEquals(count($Object2s), 2, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($CountObject2s === 2, 'object1 get many to many object2 relative by key1 with no cache');
 
         // delete an object will clear all cache.
         $Object3->delete();
         $Object1 = \ObjecttestManytomany1Query::create()->findPk(1);
         $Object2s = $Object1->getObjecttestManytomany2s();
         $CountObject2s = $Object1->countObjecttestManytomany2s();
-        $this->assertEquals(count($Object2s), 1, 'count object1 get one to many object2 relative by key1 with no cache');
-        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get one to many object2 relative by key1 with cache');
-        $this->assertInstanceOf('\\ObjecttestManytomany2', $Object2s[0], 'object1 get one to many object2 relative by key1 with no cache');
-        $this->assertTrue($CountObject2s === 1, 'object1 get one to many object2 relative by key1 with no cache');        
+        $this->assertEquals(count($Object2s), 1, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($CountObject2s === 1, 'object1 get many to many object2 relative by key1 with no cache');
     }
 
+    public function testManyToManyRelationCacheMultiple() {        
+        $this->simpleBuild('many_to_many_relation_multiple', "ObjecttestMultiple");        
+        $Object1 = new \ObjecttestMultipleManytomany1();
+        $Object1->setId(1);
+        $Object1->setTable1key1(11);
+        $Object1->setTable1key2(12);        
+        $Object2 = new \ObjecttestMultipleManytomany2();
+        $Object2->setId(2);
+        $Object2->setTable2key1(21);
+        $Object2->setTable2key2(22);        
+        $Object1->addObjecttestMultipleManytomany2($Object2);
+        $Object1->save();
+
+        $Object1 = \ObjecttestMultipleManytomany1Query::create()->findPk(1);
+        $Object2s = $Object1->getObjecttestMultipleManytomany2s();
+        $CountObject2s = $Object1->countObjecttestMultipleManytomany2s();
+        $this->assertEquals(count($Object2s), 1, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertInstanceOf('\\ObjecttestMultipleManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($CountObject2s === 1, 'object1 get many to many object2 relative by key1 with no cache');
+ 
+        $Object1 = \ObjecttestMultipleManytomany1Query::create()->findPk(1);        
+        $Object2s = $Object1->getObjecttestMultipleManytomany2s();        
+        $this->assertEquals(count($Object2s), 1, 'count object1 get manyn to many object2 relative by key1 with no cache');
+        $this->assertTrue($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestMultipleManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertTrue($Object1->countObjecttestMultipleManytomany2s() instanceof MockContainer, 'object1 count many to many object2 relative by key1 with cache');
+        $this->assertEquals((int) (string) $Object1->countObjecttestMultipleManytomany2s(), 1, 'object1 count many to many object2 relative by key1 with cache');
+
+        // save an object will clear reference cache but keep count cache.
+        $Object2->setValue(1);
+        $Object2->save();
+        $Object1 = \ObjecttestMultipleManytomany1Query::create()->findPk(1);
+        $Object2s = $Object1->getObjecttestMultipleManytomany2s();        
+        $this->assertEquals(count($Object2s), 1, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestMultipleManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($Object1->countObjecttestMultipleManytomany2s() instanceof MockContainer, 'object1 count many to many object2 relative by key1 with cache');
+        $this->assertEquals((int) (string) $Object1->countObjecttestMultipleManytomany2s(), 1, 'object1 count many to many object2 relative by key1 with cache');
+
+        // insert an object will clear all cache.
+        $Object3 = new \ObjecttestMultipleManytomany2();
+        $Object3->setId(3);
+        $Object3->setTable2key1(31);
+        $Object3->setTable2key2(32);
+        $Object1->addObjecttestMultipleManytomany2($Object3);
+        $Object1->save();
+
+        $Object1 = \ObjecttestMultipleManytomany1Query::create()->findPk(1);
+        $Object2s = $Object1->getObjecttestMultipleManytomany2s();
+        $CountObject2s = $Object1->countObjecttestMultipleManytomany2s();        
+        $this->assertEquals(count($Object2s), 2, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestMultipleManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($CountObject2s === 2, 'object1 get many to many object2 relative by key1 with no cache');
+
+        // delete an object will clear all cache.
+        $Object3->delete();
+        $Object1 = \ObjecttestMultipleManytomany1Query::create()->findPk(1);
+        $Object2s = $Object1->getObjecttestMultipleManytomany2s();
+        $CountObject2s = $Object1->countObjecttestMultipleManytomany2s();
+        $this->assertEquals(count($Object2s), 1, 'count object1 get many to many object2 relative by key1 with no cache');
+        $this->assertFalse($Object2s instanceof MockContainer, 'object1 get many to many object2 relative by key1 with cache');
+        $this->assertInstanceOf('\\ObjecttestMultipleManytomany2', $Object2s[0], 'object1 get many to many object2 relative by key1 with no cache');
+        $this->assertTrue($CountObject2s === 1, 'object1 get many to many object2 relative by key1 with no cache');
+    }  
+    
 }
