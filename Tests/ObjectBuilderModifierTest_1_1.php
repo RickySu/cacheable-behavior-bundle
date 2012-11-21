@@ -330,7 +330,7 @@ class ObjectBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_OneToOneRelationMultiple
      */
-    public function testCacheClearOneToOneRelationMultiple($ClassName, $OriginData, $ModifyData) {        
+    public function testCacheClearOneToOneRelationMultiple($ClassName, $OriginData, $ModifyData) {
         $ObjectClass1 = "{$ClassName}1";
         $QueryClass1 = "{$ClassName}1Query";
         $ObjectClass2 = "{$ClassName}2";
@@ -346,13 +346,13 @@ class ObjectBuilderModifierTest extends Base {
 
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
         $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
         $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
         $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
@@ -362,34 +362,86 @@ class ObjectBuilderModifierTest extends Base {
 
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
         $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
         $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
         $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
 
         $Object2->delete();
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by id clear cache after delete');
-        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'], $OriginData['Object1']['Id2']));
         $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by key1 clear cache after delete');
     }
 
-    public function testOneToManyRelationCacheSingle() {
-        return;
+    public function DataProvider_OneToManyRelationSingle() {
         $this->simpleBuild('one_to_many_relation_single', "Objecttest");
-        $Object1 = new \ObjecttestOnetomany1();
-        $Object1->setId(1);
-        $Object1->setKey1(2);
+        $ClassName = '\\ObjecttestOnetomany';
+        for ($i = 0; $i < 1; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Object1' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                ),
+                'ModifyData' => array(
+                    'Object1' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_OneToManyRelationSingle
+     */    
+    public function testCacheClearOneToManyRelationSingle() {
+        return;
+        $ObjectClass1 = "{$ClassName}1";
+        $QueryClass1 = "{$ClassName}1Query";
+        $ObjectClass2 = "{$ClassName}2";
+        $QueryClass2 = "{$ClassName}2Query";
+        $getMethod = str_replace('\\', '', "get{$ClassName}2s");
+        $countMethod = str_replace('\\', '', "count{$ClassName}2s");
+
+        $Object1 = new $ObjectClass1();
+        $Object1->fromArray();
         $Object1->save();
-        $Object2 = new \ObjecttestOnetomany2();
+        $Object1 = new $ObjectClass2();
         $Object2->setId(1);
         $Object2->setKey1(2);
         $Object2->save();
