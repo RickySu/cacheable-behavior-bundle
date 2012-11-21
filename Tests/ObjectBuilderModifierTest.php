@@ -12,7 +12,7 @@ class ObjectBuilderModifierTest extends Base {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_SinglePrimaryKey() {        
+    public function DataProvider_SinglePrimaryKey() {
         $this->simpleBuild('singleprimarykey', "Objecttest");
         $ClassName = '\\ObjecttestSinglepk';
         for ($i = 0; $i < 5; $i++) {
@@ -24,7 +24,7 @@ class ObjectBuilderModifierTest extends Base {
                 ),
                 'ModifyData' => array(
                     'Id' => $i,
-                    'Value' => $i + rand(),
+                    'Value' => \rand(),
                 ),
             );
         }
@@ -35,7 +35,7 @@ class ObjectBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_SinglePrimaryKey
      */
-    public function testCacheClearSinglePrimaryKey($ClassName, $OriginData, $ModifyData) {        
+    public function testCacheClearSinglePrimaryKey($ClassName, $OriginData, $ModifyData) {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
@@ -55,7 +55,7 @@ class ObjectBuilderModifierTest extends Base {
         $this->assertTrue($Object == null, 'singlepk findPK clear cache after delete');
     }
 
-    public function DataProvider_MultiplePrimaryKey() {        
+    public function DataProvider_MultiplePrimaryKey() {
         $this->simpleBuild('multipleprimarykey', "Objecttest");
         $ClassName = '\\ObjecttestMultiplepk';
         for ($i = 0; $i < 5; $i++) {
@@ -69,7 +69,7 @@ class ObjectBuilderModifierTest extends Base {
                 'ModifyData' => array(
                     'Id1' => $i,
                     'Id2' => $i,
-                    'Value' => $i + rand(),
+                    'Value' => \rand(),
                 ),
             );
         }
@@ -80,12 +80,12 @@ class ObjectBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_MultiplePrimaryKey
      */
-    public function testCacheClearMultiplePrimaryKey($ClassName, $OriginData, $ModifyData) {                
+    public function testCacheClearMultiplePrimaryKey($ClassName, $OriginData, $ModifyData) {
         $ObjectClass = $ClassName;
-        $QueryClass = "{$ClassName}Query";        
+        $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
         $Object->fromArray($OriginData);
-        $Object->save();                
+        $Object->save();
         $Object = $QueryClass::create()->findPk(array($OriginData['Id1'], $OriginData['Id2']));
         $Object = $QueryClass::create()->findPk(array($OriginData['Id1'], $OriginData['Id2']));
         $this->assertTrue($Object instanceof MockContainer, 'multiple findPK with cache hit');
@@ -100,7 +100,7 @@ class ObjectBuilderModifierTest extends Base {
         $this->assertTrue($Object == null, 'multiple findPK clear cache after delete');
     }
 
-    public function DataProvider_SingleUniqueKey() {        
+    public function DataProvider_SingleUniqueKey() {
         $this->simpleBuild('singleuniquekey', "Objecttest");
         $ClassName = '\\ObjecttestSingleuniquekey';
         for ($i = 0; $i < 1; $i++) {
@@ -114,7 +114,7 @@ class ObjectBuilderModifierTest extends Base {
                 'ModifyData' => array(
                     'Id' => $i,
                     'Key1' => $i,
-                    'Value' => $i + rand(),
+                    'Value' => \rand(),
                 ),
             );
         }
@@ -124,7 +124,7 @@ class ObjectBuilderModifierTest extends Base {
     /**
      *
      * @dataProvider DataProvider_SingleUniqueKey
-     */    
+     */
     public function testCacheClearSingleUniqueKey($ClassName, $OriginData, $ModifyData) {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
@@ -133,7 +133,7 @@ class ObjectBuilderModifierTest extends Base {
         $Object->save();
         $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
         $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
-        $this->assertTrue($Object instanceof MockContainer, 'single unique index with cache hit');                
+        $this->assertTrue($Object instanceof MockContainer, 'single unique index with cache hit');
         $this->assertEquals($Object->toArray(), $OriginData);
         $Object->fromArray($ModifyData);
         $Object->save();
@@ -143,10 +143,9 @@ class ObjectBuilderModifierTest extends Base {
         $Object->delete();
         $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
         $this->assertTrue($Object == null, 'single unique index clear cache after delete');
-     }
+    }
 
-     
-    public function DataProvider_MultipleUniqueKey() {        
+    public function DataProvider_MultipleUniqueKey() {
         $this->simpleBuild('multipleuniquekey', "Objecttest");
         $ClassName = '\\ObjecttestMultipleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -154,15 +153,15 @@ class ObjectBuilderModifierTest extends Base {
                 'ClassName' => $ClassName,
                 'OriginData' => array(
                     'Id' => $i,
-                    'Key1' => $i+10,
-                    'Key2' => $i+20,
+                    'Key1' => $i + 10,
+                    'Key2' => $i + 20,
                     'Value' => $i,
                 ),
                 'ModifyData' => array(
                     'Id' => $i,
-                    'Key1' => $i+10,
-                    'Key2' => $i+20,
-                    'Value' => $i + rand(),
+                    'Key1' => $i + 10,
+                    'Key2' => $i + 20,
+                    'Value' => \rand(),
                 ),
             );
         }
@@ -172,104 +171,214 @@ class ObjectBuilderModifierTest extends Base {
     /**
      *
      * @dataProvider DataProvider_MultipleUniqueKey
-     */     
-    public function testCacheClearMultipleUniqueKey($ClassName, $OriginData, $ModifyData) {        
+     */
+    public function testCacheClearMultipleUniqueKey($ClassName, $OriginData, $ModifyData) {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
         $Object->fromArray($OriginData);
-        $Object->save();        
+        $Object->save();
         $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();
         $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();
         $this->assertTrue($Object instanceof MockContainer, 'multipleuniquekey findOne with cache hit');
         $this->assertEquals($Object->toArray(), $OriginData);
         $Object->fromArray($ModifyData);
         $Object->save();
-        $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();        
+        $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();
         $this->assertTrue($Object instanceof $ObjectClass, 'multipleuniquekey findOne clear cache after save');
-        $this->assertEquals($Object->toArray(), $ModifyData);        
+        $this->assertEquals($Object->toArray(), $ModifyData);
         $Object->delete();
         $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();
         $this->assertTrue($Object == null, 'multipleuniquekey findOne clear cache after delete');
     }
 
-    public function testOneToOneRelationCacheSingle() {
-        return;
+    public function DataProvider_OneToOneRelationSingle() {
         $this->simpleBuild('one_to_one_relation_single', "Objecttest");
-        $Object1 = new \ObjecttestOnetoone1();
-        $Object1->setId(1);
-        $Object1->setKey1(2);
+        $ClassName = '\\ObjecttestOnetoone';
+        for ($i = 0; $i < 1; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Object1' => array(
+                        'Id' => $i,
+                        'Key1' => $i + 10,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id' => $i,
+                        'Key1' => $i + 10,
+                        'Value' => \rand(),
+                    ),
+                ),
+                'ModifyData' => array(
+                    'Object1' => array(
+                        'Id' => $i,
+                        'Key1' => $i + 10,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id' => $i,
+                        'Key1' => $i + 10,
+                        'Value' => \rand(),
+                    ),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_OneToOneRelationSingle
+     */
+    public function testCacheClearOneToOneRelationSingle($ClassName, $OriginData, $ModifyData) {
+        $ObjectClass1 = "{$ClassName}1";
+        $QueryClass1 = "{$ClassName}1Query";
+        $ObjectClass2 = "{$ClassName}2";
+        $QueryClass2 = "{$ClassName}2Query";
+        $MethodById = str_replace('\\', '', "get{$ClassName}2RelatedById");
+        $MethodByKey1 = str_replace('\\', '', "get{$ClassName}2RelatedByKey1");
+        $Object1 = new $ObjectClass1();
+        $Object1->fromArray($OriginData['Object1']);
         $Object1->save();
-        $Object2 = new \ObjecttestOnetoone2();
-        $Object2->setId(1);
-        $Object2->setKey1(2);
+        $Object2 = new $ObjectClass2();
+        $Object2->fromArray($OriginData['Object2']);
         $Object2->save();
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedById();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2, 'object1 get one to one object2 relative by id with no cache');
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedById();
+
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
+        $Object1 = $QueryClass1::create()->findOneById($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedByKey1();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2, 'object1 get one to one object2 relative by key1 with no cache');
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedByKey1();
+        $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
+        $Object2 = $Object1->$MethodByKey1();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
+        $Object1 = $QueryClass1::create()->findOneById($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodByKey1();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
-        $Object2->setValue(2);
+        $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
+
+        $Object2->fromArray($ModifyData['Object2']);
         $Object2->save();
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedById();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2, 'object1 get one to one object2 relative by id clear cache after save');
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedByKey1();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2, 'object1 get one to one object2 relative by key1 clear cache after save');
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
+
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
+        $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
+        $Object2 = $Object1->$MethodByKey1();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodByKey1();
+        $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
+        $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
+
         $Object2->delete();
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedById();
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by id clear cache after delete');
-        $Object1 = \ObjecttestOnetoone1Query::create()->findOneById(1);
-        $Object2 = $Object1->getObjecttestOnetoone2RelatedByKey1();
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodByKey1();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by key1 clear cache after delete');
     }
 
-    public function testOneToOneRelationCacheMultiple() {
-        return;
+    public function DataProvider_OneToOneRelationMultiple() {
         $this->simpleBuild('one_to_one_relation_multiple', "Objecttest");
-        $Object1 = new \ObjecttestOnetoone1Multiple();
-        $Object1->setId1(1);
-        $Object1->setId2(1);
-        $Object1->setKey1(2);
-        $Object1->setKey2(2);
+        $ClassName = '\\ObjecttestOnetooneMultiple';
+        for ($i = 0; $i < 1; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Object1' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                ),
+                'ModifyData' => array(
+                    'Object1' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                    'Object2' => array(
+                        'Id1' => $i + 10,
+                        'Id2' => $i + 20,
+                        'Key1' => $i + 30,
+                        'Key2' => $i + 40,
+                        'Value' => \rand(),
+                    ),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_OneToOneRelationMultiple
+     */
+    public function testCacheClearOneToOneRelationMultiple($ClassName, $OriginData, $ModifyData) {        
+        $ObjectClass1 = "{$ClassName}1";
+        $QueryClass1 = "{$ClassName}1Query";
+        $ObjectClass2 = "{$ClassName}2";
+        $QueryClass2 = "{$ClassName}2Query";
+        $MethodById = str_replace('\\', '', "get{$ClassName}2RelatedById1Id2");
+        $MethodByKey = str_replace('\\', '', "get{$ClassName}2RelatedByKey1Key2");
+        $Object1 = new $ObjectClass1();
+        $Object1->fromArray($OriginData['Object1']);
         $Object1->save();
-        $Object2 = new \ObjecttestOnetoone2Multiple();
-        $Object2->setId1(1);
-        $Object2->setId2(1);
-        $Object2->setKey1(2);
-        $Object2->setKey2(2);
+        $Object2 = new $ObjectClass2();
+        $Object2->fromArray($OriginData['Object2']);
         $Object2->save();
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple, 'object1 get one to one object2 relative by id with no cache');
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedByKey1Key2();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple, 'object1 get one to one object2s relative by key1 with no cache');
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedByKey1Key2();
+        $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
+        $Object2 = $Object1->$MethodByKey();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
-        $Object2->setValue(2);
+        $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
+
+        $Object2->fromArray($ModifyData['Object2']);
         $Object2->save();
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple, 'object1 get one to one object2 relative by id clear cache after save');
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedByKey1Key2();
-        $this->assertTrue($Object2 instanceof \ObjecttestOnetoone2Multiple, 'object1 get one to one object2 relative by key1 clear cache after save');
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
+
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodById();
+        $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
+        $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
+        $Object2 = $Object1->$MethodByKey();
+        $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodByKey();
+        $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
+        $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
+
         $Object2->delete();
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedById1Id2();
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by id clear cache after delete');
-        $Object1 = \ObjecttestOnetoone1MultipleQuery::create()->findPk(array(1, 1));
-        $Object2 = $Object1->getObjecttestOnetoone2MultipleRelatedByKey1Key2();
+        $Object1 = $QueryClass1::create()->findPk(array($OriginData['Object1']['Id1'],$OriginData['Object1']['Id2']));
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by key1 clear cache after delete');
     }
 

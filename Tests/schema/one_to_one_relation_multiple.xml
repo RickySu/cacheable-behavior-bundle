@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="cacheable_behavior_database" defaultIdMethod="native">
-    <table name="#Namespace#_onetoone1_multiple">
+    <table name="#Namespace#_onetoone_multiple1">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" /> 
@@ -12,7 +12,7 @@
         </unique>                
         <behavior name="cacheable"/>
     </table>
-    <table name="#Namespace#_onetoone2_multiple">
+    <table name="#Namespace#_onetoone_multiple2">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" /> 
@@ -22,11 +22,11 @@
             <unique-column name="key1" />
             <unique-column name="key2" />
         </unique>                
-        <foreign-key foreignTable="#Namespace#_onetoone1_multiple" onDelete="setnull" onUpdate="cascade">
+        <foreign-key foreignTable="#Namespace#_onetoone_multiple1" onDelete="setnull" onUpdate="cascade">
             <reference local="id1" foreign="id2" />
             <reference local="id2" foreign="id2" />
         </foreign-key>
-        <foreign-key foreignTable="#Namespace#_onetoone1_multiple" onDelete="setnull" onUpdate="cascade">
+        <foreign-key foreignTable="#Namespace#_onetoone_multiple1" onDelete="setnull" onUpdate="cascade">
             <reference local="key1" foreign="key1" />
             <reference local="key2" foreign="key2" />
         </foreign-key>
