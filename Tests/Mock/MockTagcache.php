@@ -3,7 +3,7 @@
 namespace RickySu\CacheableBehaviorBundle\Tests\Mock;
 
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
-use RickySu\TagcacheBundle\Adapter\Sqlite;
+use RickySu\Tagcache\Adapter\Sqlite;
 
 class MockTagcache extends Sqlite {
 

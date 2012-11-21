@@ -8,19 +8,19 @@
  */
  protected function findOneBy<?php foreach($Columns as $Column):?><?php echo $Column->getPhpName()?><?php endforeach?>WithCache(&$excuted, PropelPDO $con=null)
  {
-     $Criteria=new \Criteria();     
+     $Criteria = new \Criteria($this->getDBName());
 <?php foreach($Columns as $Column):?>
      if(isset($this->map[<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>])){
          $Criterion=$this->map[<?php echo $queryBuilder->getPeerBuilder()->getColumnConstant($Column)?>];
          $<?php echo $Column->getName()?>=$Criterion->getValue();
          $Criteria->add($Criterion);
-     }     
+     }
 <?php endforeach?>     
      if(!$this->equals($Criteria)){
          return;
      }
      $excuted=true;
-     <?php echo $CacheKey?>     
+     <?php echo $CacheKey?>
      $Cache=$this->getTagcache();
      if($Object=$Cache->get($CacheKey)){
          return $Object;

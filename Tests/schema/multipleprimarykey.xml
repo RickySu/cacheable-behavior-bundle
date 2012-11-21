@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="cacheable_behavior_database" defaultIdMethod="native">
+<database name="cacheable_behavior_database_#Namespace#_multiplepk" defaultIdMethod="native">
     <table name="#Namespace#_multiplepk">
-        <column name="pk1" required="true" primaryKey="true" type="INTEGER" />
-        <column name="pk2" required="true" primaryKey="true" type="INTEGER" />
+        <column name="id1" required="true" primaryKey="true" type="INTEGER" />
+        <column name="id2" required="true" primaryKey="true" type="INTEGER" />
         <column name="value" type="INTEGER" /> 
         <behavior name="cacheable"/>
     </table>

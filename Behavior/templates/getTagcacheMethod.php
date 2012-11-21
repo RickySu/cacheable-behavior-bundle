@@ -2,7 +2,7 @@
 /**
  * get TagcacheInstance.
  *
- * @return \RickySu\TagcacheBundle\TagCahe\TagcacheAdapter
+ * @return \RickySu\Tagcache\TagCahe\TagcacheAdapter
  */
  <?php if(isset($static) && $static):?>static <?php endif?>protected function getTagcache()
  {

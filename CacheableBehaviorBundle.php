@@ -7,9 +7,9 @@ use Symfony\Component\EventDispatcher\Event;
 use RickySu\CacheableBehaviorBundle\Event\EventProxy;
 use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent;
 
-class RickySuCacheableBehaviorBundle extends Bundle {
+class CacheableBehaviorBundle extends Bundle {
 
-    public function boot() {
+    public function boot() {        
         $dispatcher = EventProxy::getInstance();
         $dispatcher->addListener(EventProxy::GET_TAG_CACHE, array($this,'onGetTagcache'));
     }

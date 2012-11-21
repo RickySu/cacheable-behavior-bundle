@@ -2,7 +2,7 @@
 namespace RickySu\CacheableBehaviorBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use RickySu\TagcacheBundle\Adapter\TagcacheAdapter;
+use RickySu\Tagcache\Adapter\TagcacheAdapter;
 
 class GetTagcacheEvent extends Event{
     protected $Tagcace=null;
