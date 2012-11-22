@@ -1,0 +1,21 @@
+{
+    "name": "rickysu/cacheable-behavior-bundle",
+    "description": "Provide a propel1 smart cache behavior bundle for symfony 2",
+    "keywords": ["rickysu", "propel", "cache"],
+    "homepage": "https://github.com/RickySu/cacheable-behavior-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricky Su",
+            "email": "ricky@ez2.us"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "rickysu/tagcache": "1.0.*"
+    },
+    "autoload": {
+        "psr-0": { "RickySu\\CacheableBehaviorBundle": "" }
+    },
+    "target-dir": "RickySu/CacheableBehaviorBundle"
+}
