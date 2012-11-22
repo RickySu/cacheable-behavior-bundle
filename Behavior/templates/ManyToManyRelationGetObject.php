@@ -47,7 +47,7 @@
          }
          $TagCacheTags[]=$this->get<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
-         $Cache=$this->getTagcache();                  
+         $Cache=$this->getTagcache();         
          if($Objects=$Cache->get($CacheKey)){         
              if($criteria!==null){
                  $this-><?php echo $collName?> = $Objects;
