@@ -162,7 +162,7 @@ class ObjectBuilderModifierTest extends Base {
         $this->assertTrue($Object2s instanceof MockContainer);
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string)$CountObject2s,1);
-//        $this->assertEquals($Object2->toArray(),$Object2s[0]->toArray());
+        $this->assertEquals($Object2->toArray(),$Object2s[0]->toArray());
         
     }
 
