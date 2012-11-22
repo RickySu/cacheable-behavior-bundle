@@ -2,46 +2,52 @@
 
 namespace RickySu\CacheableBehaviorBundle\Behavior;
 
-use RickySu\CacheableBehaviorBundle\ContainerHolder\Holder;
-use RickySu\CacheableBehaviorBundle\Renderer\Renderer;
 use \PropelPHPParser;
 
-class PeerBuilderModifier {
-
+class PeerBuilderModifier
+{
     protected $behavior;
     protected $table;
-    protected $peerBuilder;    
+    protected $peerBuilder;
 
-    public function __construct($behavior) {
+    public function __construct($behavior)
+    {
         $this->behavior = $behavior;
-        $this->table = $behavior->getTable();        
+        $this->table = $behavior->getTable();
     }
 
-    public function staticMethods($builder) {
+    public function staticMethods($builder)
+    {
         $this->peerBuilder = $builder;
         $Script = '';
         $Script.=$this->addUniqueIndexCache();
         $Script.=$this->addGetTagcache();
+
         return $Script;
     }
 
-    public function peerFilter(&$script) {
+    public function peerFilter(&$script)
+    {
         $this->addPKCache($script);
     }
 
-    protected function replaceMethodName($script, $MethodName) {
+    protected function replaceMethodName($script, $MethodName)
+    {
         $Pattern = '/public\s+static\s+function\s+(' . $MethodName . ')/i';
+
         return preg_replace($Pattern, "protected static function rebuild_$1", $script);
     }
 
-    protected function generateCacheKey($Keys){
+    protected function generateCacheKey($Keys)
+    {
         return $this->behavior->renderTemplate('UniqueKey.php',array(
                                 'ObjectClassName'=>$this->peerBuilder->getObjectClassname(),
                                 'Keys'=>$Keys,
                             ));
     }
-    
-    protected function replaceRetrieveByPK($PKs) {                
+
+    protected function replaceRetrieveByPK($PKs)
+    {
         return $this->behavior->renderTemplate('retrieveByPK.php', array(
                     'PKs' => $PKs,
                     'CacheKey'=>$this->generateCacheKey($PKs),
@@ -49,7 +55,8 @@ class PeerBuilderModifier {
                 ));
     }
 
-    protected function addPKCache(&$script) {
+    protected function addPKCache(&$script)
+    {
         if ($this->behavior->getParameter('primarykey_cache') == 'false') {
             return;
         }
@@ -65,7 +72,8 @@ class PeerBuilderModifier {
         $script = $parser->getCode();
     }
 
-    protected function addUniqueIndexCache() {
+    protected function addUniqueIndexCache()
+    {
         $TemplateName = 'UniqueIndexCachePeer.php';
         if ($this->behavior->getParameter('uniqueindex_cache') == 'false') {
             $TemplateName = 'UniqueIndexPeer.php';
@@ -77,16 +85,18 @@ class PeerBuilderModifier {
                 $Columns[] = $this->table->getColumn($Col);
             }
             $Script.=$this->behavior->renderTemplate($TemplateName, array(
-                'Columns' => $Columns,                
+                'Columns' => $Columns,
                 'CacheKey'=>$this->generateCacheKey($Columns),
                 'peerBuilder' => $this->peerBuilder,
                     )
             );
         }
+
         return $Script;
     }
 
-    protected function addGetTagcache() {
+    protected function addGetTagcache()
+    {
         return $this->behavior->renderTemplate('getTagcacheMethod.php',array('static'=>true));
     }
 

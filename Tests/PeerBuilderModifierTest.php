@@ -3,16 +3,17 @@
 namespace RickySu\CacheableBehaviorBundle\Tests;
 
 use RickySu\CacheableBehaviorBundle\Tests\Base;
-use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class PeerBuilderModifierTest extends Base {
-
-    public function setup() {
+class PeerBuilderModifierTest extends Base
+{
+    public function setup()
+    {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_SinglePK() {
+    public function DataProvider_SinglePK()
+    {
         $this->simpleBuild('singleprimarykey', "Peertest");
         $ClassName = '\\PeertestSinglepk';
         for ($i = 0; $i < 5; $i++) {
@@ -25,6 +26,7 @@ class PeerBuilderModifierTest extends Base {
                 'retrieveMethod' => 'retrieveByPk'
             );
         }
+
         return $Row;
     }
 
@@ -32,7 +34,8 @@ class PeerBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_SinglePK
      */
-    public function testSinglePK($ClassName, $Data, $retrieveMethod) {
+    public function testSinglePK($ClassName, $Data, $retrieveMethod)
+    {
         $PeerClass = "{$ClassName}Peer";
         $ObjectClass = $ClassName;
         $this->assertTrue(method_exists($PeerClass, $retrieveMethod));
@@ -45,7 +48,8 @@ class PeerBuilderModifierTest extends Base {
         $this->assertTrue($Object instanceof MockContainer);
     }
 
-    public function DataProvider_MultiplePK() {
+    public function DataProvider_MultiplePK()
+    {
         $this->simpleBuild('multipleprimarykey', "Peertest");
         $ClassName = '\\PeertestMultiplepk';
         for ($i = 0; $i < 5; $i++) {
@@ -59,6 +63,7 @@ class PeerBuilderModifierTest extends Base {
                 'retrieveMethod' => 'retrieveByPk'
             );
         }
+
         return $Row;
     }
 
@@ -66,7 +71,8 @@ class PeerBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_MultiplePK
      */
-    public function testMultiplePK($ClassName, $Data, $retrieveMethod) {
+    public function testMultiplePK($ClassName, $Data, $retrieveMethod)
+    {
         $PeerClass = "{$ClassName}Peer";
         $ObjectClass = $ClassName;
         $this->assertTrue(method_exists($PeerClass, $retrieveMethod));
@@ -79,7 +85,8 @@ class PeerBuilderModifierTest extends Base {
         $this->assertTrue($Object instanceof MockContainer);
     }
 
-    public function DataProvider_SingleUniqueKey() {
+    public function DataProvider_SingleUniqueKey()
+    {
         $this->simpleBuild('singleuniquekey', "Peertest");
         $ClassName = '\\PeertestSingleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -93,6 +100,7 @@ class PeerBuilderModifierTest extends Base {
                 'retrieveMethod' => 'retrieveByKey'
             );
         }
+
         return $Row;
     }
 
@@ -100,7 +108,8 @@ class PeerBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_SingleUniqueKey
      */
-    public function testSingleUniqueKey($ClassName, $Data, $retrieveMethod) {
+    public function testSingleUniqueKey($ClassName, $Data, $retrieveMethod)
+    {
         $PeerClass = "{$ClassName}Peer";
         $ObjectClass = $ClassName;
         $this->assertTrue(method_exists($PeerClass, $retrieveMethod));
@@ -113,7 +122,8 @@ class PeerBuilderModifierTest extends Base {
         $this->assertTrue($Object instanceof MockContainer);
     }
 
-    public function DataProvider_MultipleUniqueKey() {
+    public function DataProvider_MultipleUniqueKey()
+    {
         $this->simpleBuild('multipleuniquekey', "Peertest");
         $ClassName = '\\PeertestMultipleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -128,6 +138,7 @@ class PeerBuilderModifierTest extends Base {
                 'retrieveMethod' => 'retrieveByKey1Key2'
             );
         }
+
         return $Row;
     }
 
@@ -135,7 +146,8 @@ class PeerBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_MultipleUniqueKey
      */
-    public function testMultipleUniqueKey($ClassName, $Data, $retrieveMethod) {
+    public function testMultipleUniqueKey($ClassName, $Data, $retrieveMethod)
+    {
         $PeerClass = "{$ClassName}Peer";
         $ObjectClass = $ClassName;
         $this->assertTrue(method_exists($PeerClass, $retrieveMethod));

@@ -2,20 +2,20 @@
 <database name="cacheable_behavior_database_#Namespace#_onetomany" defaultIdMethod="native">
     <table name="#Namespace#_onetomany1">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key" />
-        </unique>                
+        </unique>
         <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_onetomany2">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <foreign-key foreignTable="#Namespace#_onetomany1" onDelete="setnull" onUpdate="cascade">
             <reference local="key" foreign="key" />
-        </foreign-key>        
+        </foreign-key>
         <behavior name="cacheable"/>
-    </table>    
+    </table>
 </database>

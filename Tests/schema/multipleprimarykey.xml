@@ -3,7 +3,7 @@
     <table name="#Namespace#_multiplepk">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />
-        <column name="value" type="INTEGER" /> 
+        <column name="value" type="INTEGER" />
         <behavior name="cacheable"/>
     </table>
 </database>

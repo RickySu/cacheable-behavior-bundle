@@ -4,10 +4,12 @@ namespace RickySu\CacheableBehaviorBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use RickySu\Tagcache\Adapter\TagcacheAdapter;
 
-class GetTagcacheEvent extends Event{
+class GetTagcacheEvent extends Event
+{
     protected $Tagcace=null;
 
-    public function setTagcache(TagcacheAdapter $Tagcache){
+    public function setTagcache(TagcacheAdapter $Tagcache)
+    {
         $this->Tagcace=$Tagcache;
     }
 
@@ -15,7 +17,8 @@ class GetTagcacheEvent extends Event{
      *
      * @return TagcacheAdapter
      */
-    public function getTagcache(){
+    public function getTagcache()
+    {
         return $this->Tagcace;
     }
 }

@@ -3,16 +3,17 @@
 namespace RickySu\CacheableBehaviorBundle\Tests;
 
 use RickySu\CacheableBehaviorBundle\Tests\Base;
-use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class QueryBuilderModifierTest extends Base {
-
-    public function setup() {
+class QueryBuilderModifierTest extends Base
+{
+    public function setup()
+    {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_SinglePK() {
+    public function DataProvider_SinglePK()
+    {
         $this->simpleBuild('singleprimarykey', "QueryTest");
         $ClassName = '\\QueryTestSinglepk';
         for ($i = 0; $i < 5; $i++) {
@@ -24,6 +25,7 @@ class QueryBuilderModifierTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -31,7 +33,8 @@ class QueryBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_SinglePK
      */
-    public function testSinglePK($ClassName, $Data) {
+    public function testSinglePK($ClassName, $Data)
+    {
         $QueryClass = "{$ClassName}Query";
         $ObjectClass = $ClassName;
         $Object = new $ObjectClass();
@@ -43,7 +46,8 @@ class QueryBuilderModifierTest extends Base {
         $this->assertTrue($Object instanceof MockContainer);
     }
 
-    public function DataProvider_MultiplePK() {
+    public function DataProvider_MultiplePK()
+    {
         $this->simpleBuild('multipleprimarykey', "QueryTest");
         $ClassName = '\\QueryTestMultiplepk';
         for ($i = 0; $i < 5; $i++) {
@@ -56,6 +60,7 @@ class QueryBuilderModifierTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -63,7 +68,8 @@ class QueryBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_MultiplePK
      */
-    public function testMultiplePK($ClassName, $Data) {
+    public function testMultiplePK($ClassName, $Data)
+    {
         $QueryClass = "{$ClassName}Query";
         $ObjectClass = $ClassName;
         $Object = new $ObjectClass();
@@ -75,7 +81,8 @@ class QueryBuilderModifierTest extends Base {
         $this->assertTrue($Object instanceof MockContainer);
     }
 
-    public function DataProvider_SingleUniqueKey() {
+    public function DataProvider_SingleUniqueKey()
+    {
         $this->simpleBuild('singleuniquekey', "QueryTest");
         $ClassName = '\\QueryTestSingleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -88,6 +95,7 @@ class QueryBuilderModifierTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -95,7 +103,8 @@ class QueryBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_SingleUniqueKey
      */
-    public function testSingleUniqueKey($ClassName, $Data) {
+    public function testSingleUniqueKey($ClassName, $Data)
+    {
         $QueryClass = "{$ClassName}Query";
         $ObjectClass = $ClassName;
         $Object = new $ObjectClass();
@@ -111,7 +120,8 @@ class QueryBuilderModifierTest extends Base {
         $this->assertTrue($Objects[0] instanceof MockContainer);
     }
 
-    public function DataProvider_MultipleUniqueKey() {
+    public function DataProvider_MultipleUniqueKey()
+    {
         $this->simpleBuild('multipleuniquekey', "QueryTest");
         $ClassName = '\\QueryTestMultipleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -125,6 +135,7 @@ class QueryBuilderModifierTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -132,7 +143,8 @@ class QueryBuilderModifierTest extends Base {
      *
      * @dataProvider DataProvider_MultipleUniqueKey
      */
-    public function testMultipleUniqueKey($ClassName, $Data) {
+    public function testMultipleUniqueKey($ClassName, $Data)
+    {
         $QueryClass = "{$ClassName}Query";
         $ObjectClass = $ClassName;
 

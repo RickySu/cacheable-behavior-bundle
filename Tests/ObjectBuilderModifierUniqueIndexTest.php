@@ -3,16 +3,17 @@
 namespace RickySu\CacheableBehaviorBundle\Tests;
 
 use RickySu\CacheableBehaviorBundle\Tests\Base;
-use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class ObjectBuilderModifierUniqueIndexTest extends Base {
-
-    public function setup() {
+class ObjectBuilderModifierUniqueIndexTest extends Base
+{
+    public function setup()
+    {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_SinglePrimaryKey() {
+    public function DataProvider_SinglePrimaryKey()
+    {
         $this->simpleBuild('singleprimarykey', "Objecttest");
         $ClassName = '\\ObjecttestSinglepk';
         for ($i = 0; $i < 5; $i++) {
@@ -28,6 +29,7 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -35,7 +37,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
      *
      * @dataProvider DataProvider_SinglePrimaryKey
      */
-    public function testCacheClearSinglePrimaryKey($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearSinglePrimaryKey($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
@@ -55,7 +58,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
         $this->assertTrue($Object == null, 'singlepk findPK clear cache after delete');
     }
 
-    public function DataProvider_MultiplePrimaryKey() {
+    public function DataProvider_MultiplePrimaryKey()
+    {
         $this->simpleBuild('multipleprimarykey', "Objecttest");
         $ClassName = '\\ObjecttestMultiplepk';
         for ($i = 0; $i < 5; $i++) {
@@ -73,6 +77,7 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -80,7 +85,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
      *
      * @dataProvider DataProvider_MultiplePrimaryKey
      */
-    public function testCacheClearMultiplePrimaryKey($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearMultiplePrimaryKey($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
@@ -100,7 +106,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
         $this->assertTrue($Object == null, 'multiple findPK clear cache after delete');
     }
 
-    public function DataProvider_SingleUniqueKey() {
+    public function DataProvider_SingleUniqueKey()
+    {
         $this->simpleBuild('singleuniquekey', "Objecttest");
         $ClassName = '\\ObjecttestSingleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -118,6 +125,7 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -125,7 +133,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
      *
      * @dataProvider DataProvider_SingleUniqueKey
      */
-    public function testCacheClearSingleUniqueKey($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearSingleUniqueKey($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
@@ -145,7 +154,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
         $this->assertTrue($Object == null, 'single unique index clear cache after delete');
     }
 
-    public function DataProvider_MultipleUniqueKey() {
+    public function DataProvider_MultipleUniqueKey()
+    {
         $this->simpleBuild('multipleuniquekey', "Objecttest");
         $ClassName = '\\ObjecttestMultipleuniquekey';
         for ($i = 0; $i < 5; $i++) {
@@ -165,6 +175,7 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -172,7 +183,8 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
      *
      * @dataProvider DataProvider_MultipleUniqueKey
      */
-    public function testCacheClearMultipleUniqueKey($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearMultipleUniqueKey($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass = $ClassName;
         $QueryClass = "{$ClassName}Query";
         $Object = new $ObjectClass();
@@ -191,5 +203,5 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
         $Object = $QueryClass::create()->filterByKey1($OriginData['Key1'])->filterByKey2($OriginData['Key2'])->findOne();
         $this->assertTrue($Object == null, 'multipleuniquekey findOne clear cache after delete');
     }
-    
+
 }

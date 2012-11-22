@@ -4,11 +4,13 @@ namespace RickySu\CacheableBehaviorBundle\Event;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class EventProxy {
+class EventProxy
+{
     const GET_TAG_CACHE = 'cacheable_behavior.get_tagcache';
-    static protected $Instance = null;
+    protected static $Instance = null;
 
-    static public function factory() {
+    public static function factory()
+    {
         return new EventDispatcher();
     }
 
@@ -16,11 +18,13 @@ class EventProxy {
      *
      * @return EventDispatcher
      */
-    static public function getInstance() {
+    public static function getInstance()
+    {
         if (self::$Instance !== null) {
             return self::$Instance;
         }
         self::$Instance = self::factory();
+
         return self::$Instance;
     }
 

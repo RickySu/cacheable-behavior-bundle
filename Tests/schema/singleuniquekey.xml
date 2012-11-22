@@ -2,11 +2,11 @@
 <database name="cacheable_behavior_database_#Namespace#_singleuniquekey" defaultIdMethod="native">
     <table name="#Namespace#_singleuniquekey">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key" />
-        </unique>                
+        </unique>
         <behavior name="cacheable"/>
     </table>
 </database>

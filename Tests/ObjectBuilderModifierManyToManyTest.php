@@ -3,16 +3,17 @@
 namespace RickySu\CacheableBehaviorBundle\Tests;
 
 use RickySu\CacheableBehaviorBundle\Tests\Base;
-use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class ObjectBuilderModifierManyToManyTest extends Base {
-
-    public function setup() {
+class ObjectBuilderModifierManyToManyTest extends Base
+{
+    public function setup()
+    {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_ManyToManyRelationSingle() {
+    public function DataProvider_ManyToManyRelationSingle()
+    {
         $this->simpleBuild('many_to_many_relation_single', "Objecttest");
         $ClassName = '\\Objecttestmanytomany';
         for ($i = 0; $i < 5; $i++) {
@@ -50,6 +51,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -57,7 +59,8 @@ class ObjectBuilderModifierManyToManyTest extends Base {
      *
      * @dataProvider DataProvider_ManyToManyRelationSingle
      */
-    public function testCacheClearManyToManyRelationSingle($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearManyToManyRelationSingle($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass1 = "{$ClassName}1";
         $QueryClass1 = "{$ClassName}1Query";
         $ObjectClass2 = "{$ClassName}2";
@@ -73,11 +76,11 @@ class ObjectBuilderModifierManyToManyTest extends Base {
 
         foreach ($OriginData['Object2s'] as $OriginalObject2) {
             $Object2 = new $ObjectClass2();
-            $Object2->fromArray($OriginalObject2);            
+            $Object2->fromArray($OriginalObject2);
             $Object1->$addMethod($Object2);
             $Object1->save();
         }
-        
+
         $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
         $Object2s = $Object1->$getMethod();
         $CountObject2s = $Object1->$countMethod();
@@ -94,7 +97,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $CountObject2s = $Object1->$countMethod();
         foreach ($OriginData['Object2s'] as $Index => $OriginalObject2) {
             $this->assertEquals($OriginalObject2, $Object2s[$Index]->toArray());
-        }        
+        }
         $this->assertTrue($Object2s instanceof MockContainer);
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string) $CountObject2s, count($ModifyData['Object2s']));
@@ -128,7 +131,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $this->assertEquals(count($Object2s), 0);
         $this->assertEquals($CountObject2s, 0);
 
-        // insert an object will clear all cache.        
+        // insert an object will clear all cache.
         foreach ($ModifyData['Object2s'] as $ModifyDataObject2) {
             $Object2 = new $ObjectClass2();
             $Object2->fromArray($ModifyDataObject2);
@@ -180,7 +183,8 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $this->assertEquals($Object2->toArray(), $Object2s[0]->toArray());
     }
 
-    public function DataProvider_ManyToManyRelationMultiple() {
+    public function DataProvider_ManyToManyRelationMultiple()
+    {
         $this->simpleBuild('many_to_many_relation_multiple', "Objecttest");
         $ClassName = '\\ObjecttestManytomanyMultiple';
         for ($i = 0; $i < 5; $i++) {
@@ -188,7 +192,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
             $ModifyObject2s = array();
             for ($j = 0; $j < 5; $j++) {
                 $OriginObject2s[] = array(
-                    'Id' => $i * 10 + $j,                    
+                    'Id' => $i * 10 + $j,
                     'Key1' => $i * 10 + $j+10,
                     'Key2' => $i * 10 + $j+20,
                     'Value' => \rand(),
@@ -222,6 +226,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -229,7 +234,8 @@ class ObjectBuilderModifierManyToManyTest extends Base {
      *
      * @dataProvider DataProvider_ManyToManyRelationMultiple
      */
-    public function testCacheClearManyToManyRelationMultiple($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearManyToManyRelationMultiple($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass1 = "{$ClassName}1";
         $QueryClass1 = "{$ClassName}1Query";
         $ObjectClass2 = "{$ClassName}2";
@@ -245,11 +251,11 @@ class ObjectBuilderModifierManyToManyTest extends Base {
 
         foreach ($OriginData['Object2s'] as $OriginalObject2) {
             $Object2 = new $ObjectClass2();
-            $Object2->fromArray($OriginalObject2);            
+            $Object2->fromArray($OriginalObject2);
             $Object1->$addMethod($Object2);
             $Object1->save();
         }
-        
+
         $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
         $Object2s = $Object1->$getMethod();
         $CountObject2s = $Object1->$countMethod();
@@ -266,7 +272,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $CountObject2s = $Object1->$countMethod();
         foreach ($OriginData['Object2s'] as $Index => $OriginalObject2) {
             $this->assertEquals($OriginalObject2, $Object2s[$Index]->toArray());
-        }        
+        }
         $this->assertTrue($Object2s instanceof MockContainer);
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string) $CountObject2s, count($ModifyData['Object2s']));
@@ -300,7 +306,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $this->assertEquals(count($Object2s), 0);
         $this->assertEquals($CountObject2s, 0);
 
-        // insert an object will clear all cache.        
+        // insert an object will clear all cache.
         foreach ($ModifyData['Object2s'] as $ModifyDataObject2) {
             $Object2 = new $ObjectClass2();
             $Object2->fromArray($ModifyDataObject2);
@@ -349,7 +355,7 @@ class ObjectBuilderModifierManyToManyTest extends Base {
         $this->assertTrue($Object2s instanceof MockContainer);
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string) $CountObject2s, 1);
-        $this->assertEquals($Object2->toArray(), $Object2s[0]->toArray());        
+        $this->assertEquals($Object2->toArray(), $Object2s[0]->toArray());
     }
 
 }

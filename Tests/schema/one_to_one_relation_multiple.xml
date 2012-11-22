@@ -3,25 +3,25 @@
     <table name="#Namespace#_onetoone_multiple1">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key1" required="true" type="INTEGER" /> 
-        <column name="key2" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key1" required="true" type="INTEGER" />
+        <column name="key2" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key1" />
             <unique-column name="key2" />
-        </unique>                
+        </unique>
         <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_onetoone_multiple2">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key1" required="true" type="INTEGER" /> 
-        <column name="key2" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key1" required="true" type="INTEGER" />
+        <column name="key2" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key1" />
             <unique-column name="key2" />
-        </unique>                
+        </unique>
         <foreign-key foreignTable="#Namespace#_onetoone_multiple1" onDelete="setnull" onUpdate="cascade">
             <reference local="id1" foreign="id2" />
             <reference local="id2" foreign="id2" />
@@ -31,5 +31,5 @@
             <reference local="key2" foreign="key2" />
         </foreign-key>
         <behavior name="cacheable"/>
-    </table>    
+    </table>
 </database>

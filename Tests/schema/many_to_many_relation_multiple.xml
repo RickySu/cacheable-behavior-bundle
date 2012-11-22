@@ -2,20 +2,20 @@
 <database name="cacheable_behavior_database_#Namespace#_manytomany_multiple" defaultIdMethod="native">
     <table name="#Namespace#_manytomany_multiple1">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key1" required="true" type="INTEGER" /> 
-        <column name="key2" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key1" required="true" type="INTEGER" />
+        <column name="key2" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key1" />
             <unique-column name="key2" />
-        </unique>                
+        </unique>
         <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_manytomany_multiple2">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key1" required="true" type="INTEGER" /> 
-        <column name="key2" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key1" required="true" type="INTEGER" />
+        <column name="key2" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key1" />
             <unique-column name="key2" />
@@ -27,7 +27,7 @@
         <column name="t1key1" type="bigint" primaryKey="true" />
         <column name="t1key2" type="bigint" primaryKey="true" />
         <column name="t2key1" type="bigint" primaryKey="true" />
-        <column name="t2key2" type="bigint" primaryKey="true" />        
+        <column name="t2key2" type="bigint" primaryKey="true" />
         <foreign-key foreignTable="#Namespace#_manytomany_multiple1" onDelete="cascade" onUpdate="cascade">
             <reference local="t1key1" foreign="key1" />
             <reference local="t1key2" foreign="key2" />
@@ -35,6 +35,6 @@
         <foreign-key foreignTable="#Namespace#_manytomany_multiple2" onDelete="cascade" onUpdate="cascade">
             <reference local="t2key1" foreign="key1" />
             <reference local="t2key2" foreign="key2" />
-        </foreign-key>        
+        </foreign-key>
     </table>
 </database>

@@ -10,9 +10,9 @@
      *
      * @param array $key Primary key to use for the query
                          A Primary key composition: [$id, $username]
-     * @param     PropelPDO $con an optional connection object
+     * @param PropelPDO $con an optional connection object
      *
-     * @return   <?php echo $queryBuilder->getObjectClassname()?> |<?php echo $queryBuilder->getObjectClassname()?> []|mixed the result, formatted by the current formatter
+     * @return <?php echo $queryBuilder->getObjectClassname()?> |<?php echo $queryBuilder->getObjectClassname()?> []|mixed the result, formatted by the current formatter
      */
      public function findPk($key, PropelPDO $con = null)
      {
@@ -21,11 +21,12 @@
 <?php endforeach?>
          <?php echo $CacheKey?>
          $Cache=$this->getTagcache();
-         if($Obj=$Cache->get($CacheKey)){
+         if ($Obj=$Cache->get($CacheKey)) {
              return $Obj;
          }
-         if($Obj=$this->rebuild_findPk($key, $con)){
+         if ($Obj=$this->rebuild_findPk($key, $con)) {
              $Cache->set($CacheKey,$Obj);
          }
+
          return $Obj;
      }

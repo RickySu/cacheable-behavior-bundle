@@ -9,16 +9,18 @@
  */
 public function find($con = null)
 {
-    $excuted=false;    
-    foreach($this->getFindOneByUniqueIndexMethods() as $Method){
+    $excuted=false;
+    foreach ($this->getFindOneByUniqueIndexMethods() as $Method) {
         $Object=$this->$Method($executed,$con);
-        if($executed){
-            if($Object){
+        if ($executed) {
+            if ($Object) {
                 return array($Object);
             }
+
             return null;
         }
     }
+
     return parent::find($con);
 }
 
@@ -33,18 +35,20 @@ public function find($con = null)
  */
 public function findOne($con = null)
 {
-    $excuted=false;    
-    foreach($this->getFindOneByUniqueIndexMethods() as $Method){
-        $Object=$this->$Method($executed,$con);        
-        if($executed){        
+    $excuted=false;
+    foreach ($this->getFindOneByUniqueIndexMethods() as $Method) {
+        $Object=$this->$Method($executed,$con);
+        if ($executed) {
             return $Object;
         }
     }
+
     return parent::findOne($con);
 }
 
 protected function getFindOneByUniqueIndexMethods()
 {
     static $Methods=array(<?php foreach($UniqueIndexs as $UniqueIndex):?>"findOneBy<?php foreach($UniqueIndex as $Column):?><?php echo $Column->getPhpName()?><?php endforeach?>WithCache",<?php endforeach?>);
+
     return $Methods;
 }

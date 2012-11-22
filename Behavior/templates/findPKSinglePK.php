@@ -9,7 +9,7 @@
      * $obj  = $c->findPk(12, $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param mixed     $key Primary key to use for the query
      * @param PropelPDO $con an optional connection object
      *
      * @return <?php echo $queryBuilder->getObjectClassname()?>|<?php echo $queryBuilder->getObjectClassname()?>[]|mixed the result, formatted by the current formatter
@@ -17,13 +17,14 @@
     public function findPk($pk, PropelPDO $con = null)
     {
         $<?php echo $PK->getName()?>=$pk;
-        <?php echo $CacheKey?>        
+        <?php echo $CacheKey?>
         $Cache=$this->getTagcache();
-        if($Obj=$Cache->get($CacheKey)){
+        if ($Obj=$Cache->get($CacheKey)) {
             return $Obj;
         }
-        if($Obj=$this->rebuild_findPk($pk,$con)){
+        if ($Obj=$this->rebuild_findPk($pk,$con)) {
             $Cache->set($CacheKey,$Obj);
         }
+
         return $Obj;
     }

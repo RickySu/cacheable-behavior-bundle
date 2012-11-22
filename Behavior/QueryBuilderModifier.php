@@ -2,52 +2,59 @@
 
 namespace RickySu\CacheableBehaviorBundle\Behavior;
 
-use RickySu\CacheableBehaviorBundle\ContainerHolder\Holder;
-use RickySu\CacheableBehaviorBundle\Renderer\Renderer;
 use \PropelPHPParser;
 
-class QueryBuilderModifier {
-
+class QueryBuilderModifier
+{
     protected $behavior;
     protected $table;
     protected $queryBuilder;
 
-    public function __construct($behavior) {
+    public function __construct($behavior)
+    {
         $this->behavior = $behavior;
         $this->table = $behavior->getTable();
     }
 
-    public function queryMethods($builder) {
+    public function queryMethods($builder)
+    {
         $this->queryBuilder = $builder;
         $Script = '';
         $Script.=$this->addGetTagcache();
         $UniqueIndexs = array();
         $Script.=$this->addUniqueIndexCache($UniqueIndexs);
         $Script.=$this->addFindHook($UniqueIndexs);
+
         return $Script;
     }
 
-    protected function generateCacheKey($Keys) {
+    protected function generateCacheKey($Keys)
+    {
         return $this->behavior->renderTemplate('UniqueKey.php', array(
                     'ObjectClassName' => $this->queryBuilder->getPeerBuilder()->getObjectClassname(),
                     'Keys' => $Keys,
                 ));
     }
 
-    protected function addFindHook($UniqueIndexs) {
+    protected function addFindHook($UniqueIndexs)
+    {
         return $this->behavior->renderTemplate('findHooklQuery.php', array('UniqueIndexs' => $UniqueIndexs));
     }
 
-    public function queryFilter(&$script) {
+    public function queryFilter(&$script)
+    {
         $this->addPKCache($script);
     }
 
-    protected function replaceMethodName($script, $MethodName) {
+    protected function replaceMethodName($script, $MethodName)
+    {
         $Pattern = '/public\s+function\s+(' . $MethodName . ')/i';
+
         return preg_replace($Pattern, "protected function rebuild_$1", $script);
     }
 
-    protected function replaceFindPKMultiplePK($PKs) {
+    protected function replaceFindPKMultiplePK($PKs)
+    {
         return $this->behavior->renderTemplate('findPKMultiplePK.php', array(
                     'PKs' => $PKs,
                     'CacheKey' => $this->generateCacheKey($PKs),
@@ -59,7 +66,8 @@ class QueryBuilderModifier {
      *
      * @param Column $PK
      */
-    protected function replaceFindPKSinglePK($PK) {
+    protected function replaceFindPKSinglePK($PK)
+    {
         return $this->behavior->renderTemplate('findPKSinglePK.php', array(
                     'PK' => $PK,
                     'CacheKey' => $this->generateCacheKey(array($PK)),
@@ -67,7 +75,8 @@ class QueryBuilderModifier {
                 ));
     }
 
-    protected function addPKCache(&$script) {
+    protected function addPKCache(&$script)
+    {
         if ($this->behavior->getParameter('primarykey_cache') == 'false') {
             return;
         }
@@ -87,7 +96,8 @@ class QueryBuilderModifier {
         $script = $parser->getCode();
     }
 
-    protected function addUniqueIndexCache(&$UniqueIndexs) {
+    protected function addUniqueIndexCache(&$UniqueIndexs)
+    {
         if ($this->behavior->getParameter('uniqueindex_cache') == 'false') {
             return;
         }
@@ -105,10 +115,12 @@ class QueryBuilderModifier {
                     )
             );
         }
+
         return $Script;
     }
 
-    protected function addGetTagcache() {
+    protected function addGetTagcache()
+    {
         return $this->behavior->renderTemplate('getTagcacheMethod.php', array('static' => false));
     }
 

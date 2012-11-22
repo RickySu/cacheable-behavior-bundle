@@ -3,16 +3,17 @@
 namespace RickySu\CacheableBehaviorBundle\Tests;
 
 use RickySu\CacheableBehaviorBundle\Tests\Base;
-use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class ObjectBuilderModifierOneToOneTest extends Base {
-
-    public function setup() {
+class ObjectBuilderModifierOneToOneTest extends Base
+{
+    public function setup()
+    {
         $this->prepareMockTagcache();
     }
 
-    public function DataProvider_OneToOneRelationSingle() {
+    public function DataProvider_OneToOneRelationSingle()
+    {
         $this->simpleBuild('one_to_one_relation_single', "Objecttest");
         $ClassName = '\\ObjecttestOnetoone';
         for ($i = 0; $i < 5; $i++) {
@@ -44,6 +45,7 @@ class ObjectBuilderModifierOneToOneTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -51,7 +53,8 @@ class ObjectBuilderModifierOneToOneTest extends Base {
      *
      * @dataProvider DataProvider_OneToOneRelationSingle
      */
-    public function testCacheClearOneToOneRelationSingle($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearOneToOneRelationSingle($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass1 = "{$ClassName}1";
         $QueryClass1 = "{$ClassName}1Query";
         $ObjectClass2 = "{$ClassName}2";
@@ -103,7 +106,8 @@ class ObjectBuilderModifierOneToOneTest extends Base {
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by key1 clear cache after delete');
     }
 
-    public function DataProvider_OneToOneRelationMultiple() {
+    public function DataProvider_OneToOneRelationMultiple()
+    {
         $this->simpleBuild('one_to_one_relation_multiple', "Objecttest");
         $ClassName = '\\ObjecttestOnetooneMultiple';
         for ($i = 0; $i < 5; $i++) {
@@ -143,6 +147,7 @@ class ObjectBuilderModifierOneToOneTest extends Base {
                 ),
             );
         }
+
         return $Row;
     }
 
@@ -150,7 +155,8 @@ class ObjectBuilderModifierOneToOneTest extends Base {
      *
      * @dataProvider DataProvider_OneToOneRelationMultiple
      */
-    public function testCacheClearOneToOneRelationMultiple($ClassName, $OriginData, $ModifyData) {
+    public function testCacheClearOneToOneRelationMultiple($ClassName, $OriginData, $ModifyData)
+    {
         $ObjectClass1 = "{$ClassName}1";
         $QueryClass1 = "{$ClassName}1Query";
         $ObjectClass2 = "{$ClassName}2";

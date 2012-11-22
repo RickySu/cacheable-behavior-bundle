@@ -2,17 +2,17 @@
 <database name="cacheable_behavior_database_#Namespace#_manytomany" defaultIdMethod="native">
     <table name="#Namespace#_manytomany1">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key" />
-        </unique>                
+        </unique>
         <behavior name="cacheable"/>
     </table>
     <table name="#Namespace#_manytomany2">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
-        <column name="key" required="true" type="INTEGER" /> 
-        <column name="value" type="INTEGER" /> 
+        <column name="key" required="true" type="INTEGER" />
+        <column name="value" type="INTEGER" />
         <unique>
             <unique-column name="key" />
         </unique>
@@ -27,6 +27,6 @@
         </foreign-key>
         <foreign-key foreignTable="#Namespace#_manytomany2" onDelete="cascade" onUpdate="cascade">
             <reference local="key2" foreign="key" />
-        </foreign-key>        
+        </foreign-key>
     </table>
 </database>

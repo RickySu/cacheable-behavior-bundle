@@ -19,41 +19,43 @@
      * If this <?php echo $ObjectClassName?> is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
+     * @param  Criteria                     $criteria optional Criteria object to narrow the query
+     * @param  PropelPDO                    $con      optional connection object
      * @return PropelObjectCollection|<?php echo $className?>[] List of <?php echo $className?> objects
      * @throws PropelException
      */
     public function get<?php echo $relCol?>($criteria = null, PropelPDO $con = null)
     {
-         if($criteria===null && $this-><?php echo $collName?>){
+         if ($criteria===null && $this-><?php echo $collName?>) {
              return $this-><?php echo $collName?>;
          }
-         if($this->isNew()){
+         if ($this->isNew()) {
              return $this->rebuild_get<?php echo $relCol?>($criteria,$con);
          }
          $CriteriaHash='';
          $TagCacheTags=array();
-         if($criteria){
+         if ($criteria) {
             $Map=$criteria->getMap();
             ksort($Map);
-            foreach($Map as $Key => $Val){
+            foreach ($Map as $Key => $Val) {
                  $criteria->remove($Key);
                  $criteria->add($Val);
             }
-            $CriteriaHash='#'.md5($criteria->toString());            
+            $CriteriaHash='#'.md5($criteria->toString());
          }
          $TagCacheTags[]=$this->get<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
          $Cache=$this->getTagcache();
-         if($Objects=$Cache->get($CacheKey)){
-             if($criteria!==null){
+         if ($Objects=$Cache->get($CacheKey)) {
+             if ($criteria!==null) {
                  $this-><?php echo $collName?> = $Objects;
              }
+
              return $Objects;
          }
-         if($Objects=$this->rebuild_get<?php echo $relCol?>($criteria,$con)){
+         if ($Objects=$this->rebuild_get<?php echo $relCol?>($criteria,$con)) {
              $Cache->set($CacheKey,$Objects,$TagCacheTags);
          }
+
          return $Objects;
     }
