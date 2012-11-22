@@ -33,7 +33,7 @@
                  $criteria->remove($Key);
                  $criteria->add($Val);
             }
-            $CriteriaHash='#'.md5($criteria->toString());            
+            $CriteriaHash='#'.md5($criteria->toString());
          }
          $TagCacheTags[]=$this->count<?php echo $relCol?>CacheTag();
          $CacheKey=<?php echo $CacheKey?>;
