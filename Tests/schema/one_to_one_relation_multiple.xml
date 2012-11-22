@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="cacheable_behavior_database" defaultIdMethod="native">
+<database name="cacheable_behavior_database_#Namespace#_onetoone_multiple" defaultIdMethod="native">
     <table name="#Namespace#_onetoone_multiple1">
         <column name="id1" required="true" primaryKey="true" type="INTEGER" />
         <column name="id2" required="true" primaryKey="true" type="INTEGER" />

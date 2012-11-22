@@ -15,7 +15,7 @@ class ObjectBuilderModifierOneToOneTest extends Base {
     public function DataProvider_OneToOneRelationSingle() {
         $this->simpleBuild('one_to_one_relation_single', "Objecttest");
         $ClassName = '\\ObjecttestOnetoone';
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $Row[] = array(
                 'ClassName' => $ClassName,
                 'OriginData' => array(
@@ -106,7 +106,7 @@ class ObjectBuilderModifierOneToOneTest extends Base {
     public function DataProvider_OneToOneRelationMultiple() {
         $this->simpleBuild('one_to_one_relation_multiple', "Objecttest");
         $ClassName = '\\ObjecttestOnetooneMultiple';
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $Row[] = array(
                 'ClassName' => $ClassName,
                 'OriginData' => array(

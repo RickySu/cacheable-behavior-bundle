@@ -6,81 +6,148 @@ use RickySu\CacheableBehaviorBundle\Tests\Base;
 use RickySu\CacheableBehaviorBundle\Event\GetTagcacheEvent\GetTagcacheEvent;
 use RickySu\CacheableBehaviorBundle\Tests\Mock\MockContainer;
 
-class QueryBuilderModifierTest extends Base
-{
-    public function setup()
-    {
+class QueryBuilderModifierTest extends Base {
+
+    public function setup() {
         $this->prepareMockTagcache();
     }
-    
-    public function testSinglePK()
-    {
-        $this->simpleBuild('singleprimarykey',"Querytest");
-        $this->assertTrue(method_exists('\\QuerytestSinglepkQuery', 'findPK'),'findPk with single PK');
-        $Singlepk=new \QuerytestSinglepk();
-        $Singlepk->setId(1);
-        $Singlepk->save();
-        $Singlepk=\QuerytestSinglepkQuery::create()->findPk(1);
-        $this->assertTrue($Singlepk instanceof \QuerytestSinglepk,'findPk with no cache');
-        $Singlepk=\QuerytestSinglepkQuery::create()->findPk(1);
-        $this->assertTrue($Singlepk instanceof MockContainer,'findPK with cache hit');        
-    }
-    
-    public function testMultiplePK()
-    {
-        $this->simpleBuild('multipleprimarykey',"Querytest");
-        $this->assertTrue(method_exists('\\QuerytestMultiplepkQuery', 'findPk'),'findPk with multiple PK');
-        $Multiplepk=new \QuerytestMultiplepk();
-        $Multiplepk->setPk1(1);
-        $Multiplepk->setPk2(1);
-        $Multiplepk->save();
-        $Multiplepk=\QuerytestMultiplepkQuery::create()->findPK(array(1,1));
-        $this->assertTrue($Multiplepk instanceof \QuerytestMultiplepk,'findPK with no cache');
-        $Multiplepk=\QuerytestMultiplepkQuery::create()->findPK(array(1,1));
-        $this->assertTrue($Multiplepk instanceof MockContainer,'findPK with cache hit');        
-    }    
-    
-    public function testSingleUniqueKey()
-    {
-        $this->simpleBuild('singleuniquekey','Querytest');
-        $Singleuniquekey=new \QuerytestSingleuniquekey();
-        $Singleuniquekey->setId(1);
-        $Singleuniquekey->setKey1(1);
-        $Singleuniquekey->save();        
-        $Singleuniquekey=\QuerytestSingleuniquekeyQuery::create()->findOneByKey1(1);
-        $this->assertTrue($Singleuniquekey instanceof \QuerytestSingleuniquekey,'findOneByKey1 with no cache');                
-        $Singleuniquekey=\QuerytestSingleuniquekeyQuery::create()->findOneByKey1(1);
-        $this->assertTrue($Singleuniquekey instanceof MockContainer,'findOneByKey1 with cache hit');
-        $Singleuniquekeys=\QuerytestSingleuniquekeyQuery::create()->findByKey1(1);        
-        $this->assertTrue(count($Singleuniquekeys)==1,'count findByKey1 with cache hit');
-        $this->assertTrue($Singleuniquekeys[0] instanceof MockContainer,'findByKey1 with cache hit');
-        $Singleuniquekey=\QuerytestSingleuniquekeyQuery::create()->filterByKey1(1)->findOne();        
-        $this->assertTrue($Singleuniquekey instanceof MockContainer,'filterByKey1 with cache hit and findOne');
-        $Singleuniquekeys=\QuerytestSingleuniquekeyQuery::create()->filterByKey1(1)->find();        
-        $this->assertTrue($Singleuniquekeys[0] instanceof MockContainer,'filterByKey1 with cache hit and find');
+
+    public function DataProvider_SinglePK() {
+        $this->simpleBuild('singleprimarykey', "QueryTest");
+        $ClassName = '\\QueryTestSinglepk';
+        for ($i = 0; $i < 5; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Id' => $i,
+                    'Value' => \rand(),
+                ),
+            );
+        }
+        return $Row;
     }
 
-    public function testMultipleUniqueKey()
-    {
-        $this->simpleBuild('multipleuniquekey','Querytest');        
-        $Multipleuniquekey=new \QuerytestMultipleuniquekey();
-        $Multipleuniquekey->setId(1);
-        $Multipleuniquekey->setKey1(1);
-        $Multipleuniquekey->setKey2(2);
-        $Multipleuniquekey->save();
-        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->findOne();
-        $this->assertTrue($Multipleuniquekey instanceof \QuerytestMultipleuniquekey,'filterByKey1 filterByKey2 with no cache');
-        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->findOne();
-        $this->assertTrue($Multipleuniquekey instanceof MockContainer,'filterByKey1 filterByKey2 and findOne with cache hit');
-        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->filterById(1)->findOne();        
-        $this->assertTrue($Multipleuniquekey instanceof \QuerytestMultipleuniquekey,'filterByKey1 filterByKey2 filterById with no cache');
-        $Multipleuniquekey=\QuerytestMultipleuniquekeyQuery::create()->filterByKey2(2)->filterByKey1(1)->findOne();
-        $this->assertTrue($Multipleuniquekey instanceof MockContainer,'filterByKey2 filterByKey1 and findOne with cache hit');
-        $Multipleuniquekeys=\QuerytestMultipleuniquekeyQuery::create()->filterByKey1(1)->filterByKey2(2)->find();
-        $this->assertTrue(count($Multipleuniquekeys)==1,'count filterByKey1 filterByKey2 and find with cache hit');
-        $this->assertTrue($Multipleuniquekeys[0] instanceof MockContainer,'filterByKey1 filterByKey2 and find with cache hit');
-        $Multipleuniquekeys=\QuerytestMultipleuniquekeyQuery::create()->filterByKey2(2)->filterByKey1(1)->find();
-        $this->assertTrue($Multipleuniquekeys[0] instanceof MockContainer,'filterByKey2 filterByKey1 and find with cache hit');
-    } 
- 
+    /**
+     *
+     * @dataProvider DataProvider_SinglePK
+     */
+    public function testSinglePK($ClassName, $Data) {
+        $QueryClass = "{$ClassName}Query";
+        $ObjectClass = $ClassName;
+        $Object = new $ObjectClass();
+        $Object->fromArray($Data);
+        $Object->save();
+        $Object = $QueryClass::create()->findPk($Data['Id']);
+        $this->assertTrue($Object instanceof $ObjectClass);
+        $Object = $QueryClass::create()->findPk($Data['Id']);
+        $this->assertTrue($Object instanceof MockContainer);
+    }
+
+    public function DataProvider_MultiplePK() {
+        $this->simpleBuild('multipleprimarykey', "QueryTest");
+        $ClassName = '\\QueryTestMultiplepk';
+        for ($i = 0; $i < 5; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Id1' => $i,
+                    'Id2' => $i + 10,
+                    'Value' => \rand(),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_MultiplePK
+     */
+    public function testMultiplePK($ClassName, $Data) {
+        $QueryClass = "{$ClassName}Query";
+        $ObjectClass = $ClassName;
+        $Object = new $ObjectClass();
+        $Object->fromArray($Data);
+        $Object->save();
+        $Object = $QueryClass::create()->findPk(array($Data['Id1'], $Data['Id2']));
+        $this->assertTrue($Object instanceof $ObjectClass);
+        $Object = $QueryClass::create()->findPk(array($Data['Id1'], $Data['Id2']));
+        $this->assertTrue($Object instanceof MockContainer);
+    }
+
+    public function DataProvider_SingleUniqueKey() {
+        $this->simpleBuild('singleuniquekey', "QueryTest");
+        $ClassName = '\\QueryTestSingleuniquekey';
+        for ($i = 0; $i < 5; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Id' => $i,
+                    'Key' => $i + 10,
+                    'Value' => \rand(),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_SingleUniqueKey
+     */
+    public function testSingleUniqueKey($ClassName, $Data) {
+        $QueryClass = "{$ClassName}Query";
+        $ObjectClass = $ClassName;
+        $Object = new $ObjectClass();
+        $Object->fromArray($Data);
+        $Object->save();
+        $Object = $QueryClass::create()->findOneByKey($Data['Key']);
+        $this->assertTrue($Object instanceof $ObjectClass);
+        $Object = $QueryClass::create()->findOneByKey($Data['Key']);
+        $this->assertTrue($Object instanceof MockContainer);
+        $Object = $QueryClass::create()->filterByKey($Data['Key'])->findOne();
+        $this->assertTrue($Object instanceof MockContainer);
+        $Objects = $QueryClass::create()->filterByKey($Data['Key'])->find();
+        $this->assertTrue($Objects[0] instanceof MockContainer);
+    }
+
+    public function DataProvider_MultipleUniqueKey() {
+        $this->simpleBuild('multipleuniquekey', "QueryTest");
+        $ClassName = '\\QueryTestMultipleuniquekey';
+        for ($i = 0; $i < 5; $i++) {
+            $Row[] = array(
+                'ClassName' => $ClassName,
+                'OriginData' => array(
+                    'Id' => $i,
+                    'Key1' => $i + 10,
+                    'Key2' => $i + 20,
+                    'Value' => \rand(),
+                ),
+            );
+        }
+        return $Row;
+    }
+
+    /**
+     *
+     * @dataProvider DataProvider_MultipleUniqueKey
+     */
+    public function testMultipleUniqueKey($ClassName, $Data) {
+        $QueryClass = "{$ClassName}Query";
+        $ObjectClass = $ClassName;
+
+        $Object = new $ObjectClass();
+        $Object->fromArray($Data);
+        $Object->save();
+        $Object = $QueryClass::create()->filterByKey1($Data['Key1'])->filterByKey2($Data['Key2'])->findOne();
+        $this->assertTrue($Object instanceof $ObjectClass);
+        $Object = $QueryClass::create()->filterByKey1($Data['Key1'])->filterByKey2($Data['Key2'])->findOne();
+        $this->assertTrue($Object instanceof MockContainer);
+        $Object = $QueryClass::create()->filterByKey2($Data['Key2'])->filterByKey1($Data['Key1'])->findOne();
+        $Object = $QueryClass::create()->filterByKey2($Data['Key2'])->filterByKey1($Data['Key1'])->filterById($Data['Id'])->findOne();
+        $this->assertFalse($Object instanceof MockContainer);
+        $Objects = $QueryClass::create()->filterByKey2($Data['Key2'])->filterByKey1($Data['Key1'])->find();
+        $this->assertTrue($Objects[0] instanceof MockContainer);
+    }
+
 }

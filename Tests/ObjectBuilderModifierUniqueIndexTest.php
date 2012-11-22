@@ -103,17 +103,17 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
     public function DataProvider_SingleUniqueKey() {
         $this->simpleBuild('singleuniquekey', "Objecttest");
         $ClassName = '\\ObjecttestSingleuniquekey';
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $Row[] = array(
                 'ClassName' => $ClassName,
                 'OriginData' => array(
                     'Id' => $i,
-                    'Key1' => $i,
+                    'Key' => $i,
                     'Value' => $i,
                 ),
                 'ModifyData' => array(
                     'Id' => $i,
-                    'Key1' => $i,
+                    'Key' => $i,
                     'Value' => \rand(),
                 ),
             );
@@ -131,17 +131,17 @@ class ObjectBuilderModifierUniqueIndexTest extends Base {
         $Object = new $ObjectClass();
         $Object->fromArray($OriginData);
         $Object->save();
-        $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
-        $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
+        $Object = $QueryClass::create()->findOneByKey($OriginData['Key']);
+        $Object = $QueryClass::create()->findOneByKey($OriginData['Key']);
         $this->assertTrue($Object instanceof MockContainer, 'single unique index with cache hit');
         $this->assertEquals($Object->toArray(), $OriginData);
         $Object->fromArray($ModifyData);
         $Object->save();
-        $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
+        $Object = $QueryClass::create()->findOneByKey($OriginData['Key']);
         $this->assertTrue($Object instanceof $ObjectClass, 'single unique index clear cache after save');
         $this->assertEquals($Object->toArray(), $ModifyData);
         $Object->delete();
-        $Object = $QueryClass::create()->findOneByKey1($OriginData['Key1']);
+        $Object = $QueryClass::create()->findOneByKey($OriginData['Key']);
         $this->assertTrue($Object == null, 'single unique index clear cache after delete');
     }
 

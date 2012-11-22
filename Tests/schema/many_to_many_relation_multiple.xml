@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="cacheable_behavior_database" defaultIdMethod="native">
+<database name="cacheable_behavior_database_#Namespace#_manytomany_multiple" defaultIdMethod="native">
     <table name="#Namespace#_manytomany_multiple1">
         <column name="id" required="true" primaryKey="true" type="INTEGER" />
         <column name="key1" required="true" type="INTEGER" /> 
