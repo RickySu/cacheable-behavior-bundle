@@ -152,12 +152,12 @@ class ObjectBuilderModifierTest extends Base {
         $Object2=$Object2s[0];
         $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
         $Criteria=new \Criteria();
-        $Criteria->add($ObjectClass2Peer::ID,$Object2->getId());
         $Criteria->add($ObjectClass2Peer::KEY,null,\Criteria::ISNOTNULL);
+        $Criteria->add($ObjectClass2Peer::ID,$Object2->getId());        
         $Object2s = $Object1->getObjecttestOnetomany2s($Criteria);
         $Criteria=new \Criteria();
-        $Criteria->add($ObjectClass2Peer::ID,$Object2->getId());
-        $Criteria->add($ObjectClass2Peer::KEY,null,\Criteria::ISNOTNULL);        
+        $Criteria->add($ObjectClass2Peer::KEY,null,\Criteria::ISNOTNULL);
+        $Criteria->add($ObjectClass2Peer::ID,$Object2->getId());                
         $CountObject2s = $Object1->countObjecttestOnetomany2s($Criteria);
         $this->assertTrue($Object2s instanceof MockContainer);
         $this->assertTrue($CountObject2s instanceof MockContainer);
