@@ -15,6 +15,9 @@
         "symfony/event-dispatcher": "2.1.*",
         "rickysu/tagcache": "1.0.*"
     },
+    "suggest": {
+        "propel/propel1": "1.6.*"
+    },
     "autoload": {
         "psr-0": { "RickySu\\CacheableBehaviorBundle": "" }
     },
