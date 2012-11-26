@@ -1,6 +1,8 @@
 Propel Cacheable Behavior Bundle
 ==============
 
+[![Build Status](https://api.travis-ci.org/repositories/RickySu/cacheable-behavior-bundle.png)](https://api.travis-ci.org/repositories/RickySu/cacheable-behavior-bundle.png])
+
 Introduction
 ------------
 
