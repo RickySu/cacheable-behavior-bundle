@@ -14,7 +14,7 @@
      *
      * @return <?php echo $queryBuilder->getObjectClassname()?> |<?php echo $queryBuilder->getObjectClassname()?> []|mixed the result, formatted by the current formatter
      */
-     public function findPk($key, PropelPDO $con = null)
+     public function findPk($key, $con = null)
      {
 <?php foreach($PKs as $Index => $PK):?>
          $<?php echo $PK->getName()?>=$key[<?php echo $Index?>];

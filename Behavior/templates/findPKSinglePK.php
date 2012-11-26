@@ -14,7 +14,7 @@
      *
      * @return <?php echo $queryBuilder->getObjectClassname()?>|<?php echo $queryBuilder->getObjectClassname()?>[]|mixed the result, formatted by the current formatter
      */
-    public function findPk($pk, PropelPDO $con = null)
+    public function findPk($pk, $con = null)
     {
         $<?php echo $PK->getName()?>=$pk;
         <?php echo $CacheKey?>
