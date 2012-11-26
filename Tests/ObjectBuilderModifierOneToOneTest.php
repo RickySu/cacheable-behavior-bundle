@@ -22,24 +22,24 @@ class ObjectBuilderModifierOneToOneTest extends Base
                 'OriginData' => array(
                     'Object1' => array(
                         'Id' => $i,
-                        'Key1' => $i + 10,
+                        'Key' => $i + 10,
                         'Value' => \rand(),
                     ),
                     'Object2' => array(
                         'Id' => $i,
-                        'Key1' => $i + 10,
+                        'Key' => $i + 10,
                         'Value' => \rand(),
                     ),
                 ),
                 'ModifyData' => array(
                     'Object1' => array(
                         'Id' => $i,
-                        'Key1' => $i + 10,
+                        'Key' => $i + 10,
                         'Value' => \rand(),
                     ),
                     'Object2' => array(
                         'Id' => $i,
-                        'Key1' => $i + 10,
+                        'Key' => $i + 10,
                         'Value' => \rand(),
                     ),
                 ),
@@ -60,7 +60,7 @@ class ObjectBuilderModifierOneToOneTest extends Base
         $ObjectClass2 = "{$ClassName}2";
         $QueryClass2 = "{$ClassName}2Query";
         $MethodById = str_replace('\\', '', "get{$ClassName}2RelatedById");
-        $MethodByKey1 = str_replace('\\', '', "get{$ClassName}2RelatedByKey1");
+        $MethodByKey = str_replace('\\', '', "get{$ClassName}2RelatedByKey");
         $Object1 = new $ObjectClass1();
         $Object1->fromArray($OriginData['Object1']);
         $Object1->save();
@@ -70,14 +70,14 @@ class ObjectBuilderModifierOneToOneTest extends Base
 
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by id with no cache');
-        $Object1 = $QueryClass1::create()->findOneById($OriginData['Object1']['Id']);
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
         $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
-        $Object2 = $Object1->$MethodByKey1();
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
-        $Object1 = $QueryClass1::create()->findOneById($OriginData['Object1']['Id']);
-        $Object2 = $Object1->$MethodByKey1();
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
         $this->assertEquals($Object2->toArray(), $OriginData['Object2']);
 
@@ -90,10 +90,10 @@ class ObjectBuilderModifierOneToOneTest extends Base
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by id with cache');
         $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
-        $Object2 = $Object1->$MethodByKey1();
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof $ObjectClass2, 'object1 get one to one object2 relative by key1 with no cache');
         $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
-        $Object2 = $Object1->$MethodByKey1();
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 instanceof MockContainer, 'object1 get one to one object2 relative by key1 with cache');
         $this->assertEquals($Object2->toArray(), $ModifyData['Object2']);
 
@@ -102,7 +102,7 @@ class ObjectBuilderModifierOneToOneTest extends Base
         $Object2 = $Object1->$MethodById();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by id clear cache after delete');
         $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
-        $Object2 = $Object1->$MethodByKey1();
+        $Object2 = $Object1->$MethodByKey();
         $this->assertTrue($Object2 == null, 'object1 get one to one object2 relative by key1 clear cache after delete');
     }
 

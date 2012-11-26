@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
+        "symfony/event-dispatcher": "2.1.*",
         "rickysu/tagcache": "1.0.*"
     },
     "autoload": {
