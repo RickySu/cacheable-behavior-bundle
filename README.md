@@ -31,7 +31,7 @@ editing the composer.json file in the root project.
 ### Editing the composer.json under require: {} section add
 
 ```
-"rickysu/cacheable-behavior-bundle": "0.1.*",
+"rickysu/cacheable-behavior-bundle": "1.0.*",
 ```
 
 ### Update Composer :
