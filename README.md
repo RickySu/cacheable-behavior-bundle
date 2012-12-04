@@ -31,13 +31,13 @@ editing the composer.json file in the root project.
 ### Editing the composer.json under require: {} section add
 
 ```
-"rickysu/cacheable-behavior-bundle": "1.0.*",
+"rickysu/cacheable-behavior-bundle": "0.1.*",
 ```
 
-### Update Composer :
+### Install Bundle With Composer :
 
 ```
-php composer.phar update
+php composer.phar install
 ```
 
 How to Use
@@ -68,7 +68,7 @@ propel:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="myorm" defaultIdMethod="native" namespace="ORM\StoreBundle\Model">
-    <table name="member">        
+    <table name="member">
         <behavior name="cacheable" />
         <column name="id" type="bigint" primaryKey="true" autoIncrement="true" required="true"/>
         <column name="username" type="varchar" size="45" />
@@ -76,7 +76,7 @@ propel:
         <unique>
             <unique-column name="username" />
             <unique-column name="email" />
-        </unique>        
+        </unique>
     </table>
 ```
 
@@ -86,13 +86,13 @@ $Member=MemberPeer::retrieveByPk(1);
 $Member=MemberQuery::create()->findPk(1);
 
 //filter by username , email and build cache
-$Member=MemberPeer::retrieveByUsernameEmail('username','somebody@foo.com'); 
+$Member=MemberPeer::retrieveByUsernameEmail('username','somebody@foo.com');
 $Member=MemberQuery::create()
   ->filterByUsername('username')
   ->filterByEmail('somebody@foo.com')
   ->findOne();
 
-//delete cache when save or delete 
+//delete cache when save or delete
 $Member->save();
 $Member->delete();
 ```
@@ -111,7 +111,7 @@ $Member->delete();
     <table name="member_info">
         <behavior name="cacheable" />
         <column name="member_id" type="bigint" primaryKey="true" required="true"/>
-        <column name="realname" type="varchar" size="45" />        
+        <column name="realname" type="varchar" size="45" />
         <foreign-key foreignTable="member" onDelete="cascade" onUpdate="cascade">
             <reference local="member_id" foreign="id" />
         </foreign-key>
@@ -126,7 +126,7 @@ $Member->delete();
     <table name="category">
         <behavior name="cacheable" />
         <column name="id" type="bigint" primaryKey="true" autoIncrement="true" required="true"/>
-        <column name="name" type="varchar" size="45" />        
+        <column name="name" type="varchar" size="45" />
     </table>
     <table name="article">
         <behavior name="cacheable" />
@@ -185,6 +185,11 @@ $Article->save();
 //we need to clear $Category1 and $Category2 reference cache.
 
 ```
+
+Note
+----
+
+If your want use this behavior without symfony2 , please folow this [demo](https://github.com/RickySu/demo-cacheable-behavior-bundle).
 
 LICENSE
 -------
