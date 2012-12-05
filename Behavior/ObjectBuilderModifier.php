@@ -230,7 +230,7 @@ class ObjectBuilderModifier
             }
 
             $Script = '';
-            if($BeforeModify){
+            if ($BeforeModify) {
                 $Script.=$this->generateClearOneToManyCacheRelationChangeScript($refFK);
             }
             if ($ClearGetCache) {
@@ -289,6 +289,7 @@ class ObjectBuilderModifier
             'BeforeModify'=>$BeforeModify,
             'CacheObjectName' => 'CacheObject'.md5($refFK->getLocalColumn()),
                 ));
+
         return $this->behavior->renderTemplate("clearOneToManyCache{$Method}Object", array(
             'ObjectClassName' => $this->objectBuilder->getTable()->getPhpName(),
             'Cols'=>$Cols,
@@ -361,7 +362,6 @@ class ObjectBuilderModifier
 
         return $script;
     }
-
 
     public function preDelete($builder)
     {
