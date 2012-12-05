@@ -177,6 +177,26 @@ class ObjectBuilderModifierOneToManyTest extends Base
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string) $CountObject2s, 1);
         $this->assertEquals($Object2->toArray(), $Object2s[0]->toArray());
+
+        //change relation
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2s = $Object1->$getMethod();
+        $CountObject2s = $Object1->$countMethod();
+        $this->assertTrue($Object2s instanceof MockContainer);
+        $this->assertTrue($CountObject2s instanceof MockContainer);
+        $Object2 = $Object2s[0];
+        $newObject1 = new $ObjectClass1();
+        $newObject1->fromArray($OriginData['Object1']);
+        $newObject1->setId($newObject1->getId()+9999);
+        $newObject1->setKey($newObject1->getKey()+9999);
+        $newObject1->save();
+        $setObject1Method=str_replace('\\', '', "set{$ObjectClass1}");
+        $Object2->$setObject1Method($newObject1);
+        $Object2->save();
+        $Object2s = $Object1->$getMethod();
+        $CountObject2s = $Object1->$countMethod();
+        $this->assertFalse($Object2s instanceof MockContainer);
+        $this->assertFalse($CountObject2s instanceof MockContainer);
     }
 
     public function DataProvider_OneToManyRelationMultiple()
@@ -348,6 +368,27 @@ class ObjectBuilderModifierOneToManyTest extends Base
         $this->assertTrue($CountObject2s instanceof MockContainer);
         $this->assertEquals((int) (string) $CountObject2s, 1);
         $this->assertEquals($Object2->toArray(), $Object2s[0]->toArray());
+
+        //change relation
+        $Object1 = $QueryClass1::create()->findPk($OriginData['Object1']['Id']);
+        $Object2s = $Object1->$getMethod();
+        $CountObject2s = $Object1->$countMethod();
+        $this->assertTrue($Object2s instanceof MockContainer);
+        $this->assertTrue($CountObject2s instanceof MockContainer);
+        $Object2 = $Object2s[0];
+        $newObject1 = new $ObjectClass1();
+        $newObject1->fromArray($OriginData['Object1']);
+        $newObject1->setId($newObject1->getId()+9999);
+        $newObject1->setKey1($newObject1->getKey1()+9999);
+        $newObject1->setKey2($newObject1->getKey2()+9999);
+        $newObject1->save();
+        $setObject1Method=str_replace('\\', '', "set{$ObjectClass1}");
+        $Object2->$setObject1Method($newObject1);
+        $Object2->save();
+        $Object2s = $Object1->$getMethod();
+        $CountObject2s = $Object1->$countMethod();
+        $this->assertFalse($Object2s instanceof MockContainer);
+        $this->assertFalse($CountObject2s instanceof MockContainer);
     }
 
 }
