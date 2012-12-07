@@ -4,4 +4,5 @@ if (isset($<?php echo $CacheObjectName?>)) {
 }
 <?php else:?>
 $Cache->deleteTag(<?php echo $CacheTags?>);
-<?php endif
+<?php endif?>
+
